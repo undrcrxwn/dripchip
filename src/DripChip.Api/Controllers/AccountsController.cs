@@ -26,6 +26,8 @@ public class AccountsController : Controller
         user = new ApplicationUser
         {
             UserName = request.Email,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
             Email = request.Email
         };
 
@@ -50,6 +52,14 @@ public class AccountsController : Controller
             return BadRequest($"User cannot be created.\n{description}");
         }
 
-        return Ok();
+        var response = new RegisterAccountResponse
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email
+        };
+
+        return Ok(response);
     }
 }
