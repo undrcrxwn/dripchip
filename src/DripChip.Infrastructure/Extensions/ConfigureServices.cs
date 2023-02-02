@@ -1,5 +1,6 @@
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Persistence;
+using DripChip.Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,11 +12,13 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHostedService<DatabaseInitializer>();
+        
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services
-            .AddIdentity<ApplicationUser, IdentityRole>()
+            .AddIdentity<ApplicationUser, IdentityRole<int>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services.Configure<IdentityOptions>(options =>
