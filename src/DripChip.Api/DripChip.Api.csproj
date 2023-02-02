@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>8ae4ee8d-cfc7-4936-abdd-2f1d12f969a9</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,10 @@
 
     <ItemGroup>
       <Folder Include="Controllers" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DripChip.Infrastructure\DripChip.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
