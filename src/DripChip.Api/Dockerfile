@@ -1,20 +1,17 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-WORKDIR /src
-COPY ["src/DripChip.Api/DripChip.Api.csproj", "DripChip.Api/"]
-RUN dotnet restore "src/DripChip.Api/DripChip.Api.csproj"
+# Copy project files
 COPY . .
-WORKDIR "/src/DripChip.Api"
-RUN dotnet build "DripChip.Api.csproj" -c Release -o /app/build
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
-FROM build AS publish
-RUN dotnet publish "DripChip.Api.csproj" -c Release -o /app/publish
-
-FROM base AS final
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "DripChip.Api.dll"]
