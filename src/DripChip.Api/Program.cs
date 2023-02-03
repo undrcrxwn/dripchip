@@ -26,4 +26,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/health", _ =>
+    Task.FromResult(Results.Ok()));
+
 app.Run();

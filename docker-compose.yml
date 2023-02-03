@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
   database:
     image: postgres:latest
@@ -8,16 +9,18 @@ services:
       - POSTGRES_DB=animal-chipization
       - POSTGRES_USER=dripchip
       - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
+  
   webapi:
     build:
-      context: ./src/DripChip.Api
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "9000:80"
     depends_on:
       - database
     environment:
-      - ConnectionStrings:DefaultConnection=Host=localhost;Port=5432;Database=animal-chipization;Username=dripchip;Password=FvXVPa5Nt9rkU7dZ
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings:DefaultConnection=Host=database;Port=5432;Database=animal-chipization;Username=dripchip;Password=FvXVPa5Nt9rkU7dZ
+  
   tests:
     image: mrexpen/planet_olymp_phase1
     pull_policy: always

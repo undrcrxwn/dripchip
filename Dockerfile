@@ -1,14 +1,13 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 # Copy project files
-COPY . .
+COPY /src .
 # Restore as distinct layers
-RUN dotnet restore
+RUN dotnet restore "DripChip.Api/DripChip.Api.csproj"
 # Build and publish a release
-RUN dotnet publish -c Release -o out
+RUN dotnet publish "DripChip.Api/DripChip.Api.csproj" -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
