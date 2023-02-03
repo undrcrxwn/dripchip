@@ -1,4 +1,5 @@
 using DripChip.Api.Extensions;
+using DripChip.Application.Extensions;
 using DripChip.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ builder.Services
     .AddControllers();
 
 builder.Services
+    .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration)
     .AddApiServices();
 

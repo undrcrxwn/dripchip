@@ -16,4 +16,8 @@
       <Folder Include="Persistence\Migrations" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DripChip.Application\DripChip.Application.csproj" />
+    </ItemGroup>
+
 </Project>

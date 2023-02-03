@@ -1,4 +1,4 @@
-namespace DripChip.Api.DTOs;
+namespace DripChip.Application.DTOs;
 
 public class RegisterAccountResponse
 {

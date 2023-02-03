@@ -1,3 +1,4 @@
+using DripChip.Application.Abstractions.Common;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;
@@ -12,13 +13,15 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHostedService<DatabaseInitializer>();
+        services
+            .AddHostedService<DatabaseInitializer>()
+            .AddScoped<IAccountService, AccountService>();
         
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services
-            .AddIdentity<ApplicationUser, IdentityRole<int>>()
+            .AddIdentity<Account, IdentityRole<int>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services.Configure<IdentityOptions>(options =>

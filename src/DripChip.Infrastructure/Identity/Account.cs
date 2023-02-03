@@ -1,8 +1,9 @@
+using DripChip.Application.Abstractions.Common;
 using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser<int>
+public class Account : IdentityUser<int>, IAccount
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
