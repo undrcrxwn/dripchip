@@ -13,7 +13,7 @@ public class AccountsController : ApiControllerBase
         _accounts = accounts;
 
     [HttpPost("~/registration")]
-    public async Task<RegisterAccountResponse> Register([FromBody] RegisterAccountRequest request) =>
+    public async Task<RegisterAccountResponse> Register([FromBody] RegisterAccountRequest request) => 
         await _accounts.RegisterAsync(request);
 
     [HttpGet("{accountId}")]

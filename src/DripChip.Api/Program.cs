@@ -1,4 +1,5 @@
 using DripChip.Api.Extensions;
+using DripChip.Api.Middleware;
 using DripChip.Application.Extensions;
 using DripChip.Infrastructure.Extensions;
 
@@ -22,10 +23,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.MapGet("/health", _ =>
