@@ -1,14 +1,8 @@
 using DripChip.Api.Extensions;
-using DripChip.Api.Middleware;
 using DripChip.Application.Extensions;
 using DripChip.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services
-    .AddEndpointsApiExplorer()
-    .AddSwaggerGen()
-    .AddControllers();
 
 builder.Services
     .AddApplicationServices()
@@ -23,12 +17,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-app.MapGet("/health", _ =>
-    Task.FromResult(Results.Ok()));
 
 app.Run();
