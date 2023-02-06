@@ -19,4 +19,8 @@ public class AccountsController : ApiControllerBase
     [HttpGet("{accountId}")]
     public async Task<AccountResponse> GetById([FromRoute] int accountId) =>
         await _accounts.GetByIdAsync(accountId);
+    
+    [HttpGet("[action]")]
+    public async Task<IEnumerable<AccountResponse>> Search([FromQuery] SearchAccountRequest request) =>
+        await _accounts.SearchAsync(request);
 }

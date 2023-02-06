@@ -15,7 +15,8 @@ public static class ConfigureServices
     {
         services
             .AddHostedService<DatabaseInitializer>()
-            .AddScoped<IAccountService, AccountService>();
+            .AddScoped<IAccountService, AccountService>()
+            .AddSingleton<IFilterFactory, FilterFactory>();
         
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
