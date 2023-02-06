@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using DripChip.Application.Abstractions.Common;
 using DripChip.Application.DTOs;
+using DripChip.Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using DripChip.Application.Extensions;
 using Mapster;
@@ -24,7 +25,7 @@ public class AccountService : IAccountService
         // Email uniqueness validation
         var account = await _userManager.FindByEmailAsync(request.Email);
         if (account is not null)
-            throw new InvalidOperationException("Account with the specified email already exists.");
+            throw new AlreadyExistsException("Account with the specified email already exists.");
 
         account = new Account
         {
@@ -79,7 +80,7 @@ public class AccountService : IAccountService
     {
         var account =
             await _userManager.FindByIdAsync(accountId.ToString())
-            ?? throw new InvalidOperationException("Account not found.");
+            ?? throw new NotFoundException("Account not found.");
 
         return new AccountResponse
         {

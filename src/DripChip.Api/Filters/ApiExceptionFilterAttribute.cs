@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using DripChip.Application.Exceptions;
 
-
 namespace DripChip.Api.Filters;
 
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
@@ -12,7 +11,8 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         [typeof(ValidationException)] = HandleValidationException,
         [typeof(NotFoundException)] = HandleNotFoundException,
         [typeof(UnauthorizedAccessException)] = HandleUnauthorizedAccessException,
-        [typeof(ForbiddenException)] = HandleAccessDeniedException
+        [typeof(ForbiddenException)] = HandleAccessDeniedException,
+        [typeof(AlreadyExistsException)] = HandleAlreadyExistsException
     };
 
     public override void OnException(ExceptionContext context)
@@ -24,7 +24,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     private static void HandleException(ExceptionContext context)
     {
         var type = context.Exception.GetType();
-        
+
         if (ExceptionHandlers.ContainsKey(type))
         {
             ExceptionHandlers[type].Invoke(context);
@@ -63,10 +63,10 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         var exception = (NotFoundException)context.Exception;
 
-        var details = new ProblemDetails()
+        var details = new ProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-            Title = "The specified resource was not found.",
+            Title = "Not found",
             Detail = exception.Message
         };
 
@@ -103,6 +103,23 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new ObjectResult(details)
         {
             StatusCode = StatusCodes.Status403Forbidden
+        };
+
+        context.ExceptionHandled = true;
+    }
+
+    private static void HandleAlreadyExistsException(ExceptionContext context)
+    {
+        var details = new ProblemDetails
+        {
+            Status = StatusCodes.Status409Conflict,
+            Title = "Already exists",
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8"
+        };
+
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status409Conflict
         };
 
         context.ExceptionHandled = true;
