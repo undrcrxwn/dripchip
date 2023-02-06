@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using System.Reflection;
 using DripChip.Application.Abstractions.Common;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,23 +17,19 @@ public class CaseInsensitiveContainsFilter<T> : IFilter<T>
 
     public IQueryable<T> Apply(IQueryable<T> items)
     {
-        var iLike =
-            typeof(NpgsqlDbFunctionsExtensions).GetRuntimeMethod(
-                nameof(NpgsqlDbFunctionsExtensions.ILike),
-                new[] { typeof(DbFunctions), typeof(string), typeof(string) })!;
-
         var parameter = Expression.Parameter(typeof(T));
-        
-        var expression =
+
+        // Expression form of items.Where(item => EF.Functions.ILike(selector(item), pattern))
+        var predicate =
             Expression.Lambda<Func<T, bool>>(
                 Expression.Call(
                     instance: null,
-                    method: iLike,
+                    method: NpgsqlMethodReferences.CaseInsensitiveLikeMethod,
                     Expression.Constant(EF.Functions),
                     Expression.Invoke(_selector, parameter),
                     Expression.Constant(_pattern)),
                 parameter);
 
-        return items.Where(expression);
+        return items.Where(predicate);
     }
 }
