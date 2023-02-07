@@ -18,7 +18,7 @@ services:
     depends_on:
       - database
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings:DefaultConnection=Host=database;Port=5432;Database=animal-chipization;Username=dripchip;Password=FvXVPa5Nt9rkU7dZ
   
   tests:

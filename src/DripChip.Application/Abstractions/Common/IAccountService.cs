@@ -1,4 +1,6 @@
-using DripChip.Application.DTOs;
+using DripChip.Application.Features.Accounts.Get;
+using DripChip.Application.Features.Accounts.Register;
+using DripChip.Application.Features.Accounts.Search;
 
 namespace DripChip.Application.Abstractions.Common;
 

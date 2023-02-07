@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DripChip.Application.DTOs;
+namespace DripChip.Application.Features.Accounts.Register;
 
 public class RegisterAccountRequest
 {

@@ -1,4 +1,4 @@
-namespace DripChip.Application.DTOs;
+namespace DripChip.Application.Features.Accounts.Search;
 
 public class SearchAccountRequest
 {

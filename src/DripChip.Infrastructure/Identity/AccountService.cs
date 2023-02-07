@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using DripChip.Application.Abstractions.Common;
-using DripChip.Application.DTOs;
 using DripChip.Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using DripChip.Application.Extensions;
+using DripChip.Application.Features.Accounts.Get;
+using DripChip.Application.Features.Accounts.Register;
+using DripChip.Application.Features.Accounts.Search;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
