@@ -9,6 +9,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     private static readonly Dictionary<Type, Action<ExceptionContext>> ExceptionHandlers = new()
     {
         [typeof(ValidationException)] = HandleValidationException,
+        [typeof(FluentValidation.ValidationException)] = HandleFluentValidationException,
         [typeof(NotFoundException)] = HandleNotFoundException,
         [typeof(UnauthorizedAccessException)] = HandleUnauthorizedAccessException,
         [typeof(ForbiddenException)] = HandleAccessDeniedException,
@@ -40,6 +41,27 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         var exception = (ValidationException)context.Exception;
 
         var details = new ValidationProblemDetails(exception.Errors)
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+        };
+
+        context.Result = new BadRequestObjectResult(details);
+        context.ExceptionHandled = true;
+    }
+
+    private static void HandleFluentValidationException(ExceptionContext context)
+    {
+        var exception = (FluentValidation.ValidationException)context.Exception;
+
+        var failuresByProperty = exception.Errors
+            .GroupBy(error => error.PropertyName)
+            .ToDictionary(
+                group => group.Key,
+                group => group
+                    .Select(failure => failure.ErrorMessage)
+                    .ToArray());
+        
+        var details = new ValidationProblemDetails(failuresByProperty)
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
         };

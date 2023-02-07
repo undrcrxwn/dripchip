@@ -4,6 +4,7 @@ using DripChip.Application.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using DripChip.Application.Extensions;
 using DripChip.Application.Features.Accounts.Get;
+using DripChip.Application.Features.Accounts.Get.ById;
 using DripChip.Application.Features.Accounts.Register;
 using DripChip.Application.Features.Accounts.Search;
 using Mapster;
@@ -78,10 +79,10 @@ public class AccountService : IAccountService
         };
     }
 
-    public async Task<AccountResponse> GetByIdAsync(int accountId)
+    public async Task<AccountResponse> GetByIdAsync(GetAccountByIdRequest request)
     {
         var account =
-            await _userManager.FindByIdAsync(accountId.ToString())
+            await _userManager.FindByIdAsync(request.AccountId.ToString())
             ?? throw new NotFoundException("Account not found.");
 
         return new AccountResponse
