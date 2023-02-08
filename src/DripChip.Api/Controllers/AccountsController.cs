@@ -33,7 +33,7 @@ public class AccountsController : ApiControllerBase
         await _mediator.Send(query);
 
     [HttpPut("{accountId}"), Authorize]
-    public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromQuery] UpdateAccountCommand command) =>
+    public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromBody] UpdateAccountCommand command) =>
         await _mediator.Send(command with { AccountId = accountId });
     
     [HttpDelete("{accountId}"), Authorize]
