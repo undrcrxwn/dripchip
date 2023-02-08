@@ -27,6 +27,7 @@ public static class ConfigureServices
 
         services
             .AddIdentity<Account, IdentityRole<int>>()
+            .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         return services.Configure<IdentityOptions>(options =>
