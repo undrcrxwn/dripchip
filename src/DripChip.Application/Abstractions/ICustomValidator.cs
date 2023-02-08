@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace DripChip.Application.Abstractions.Common;
+namespace DripChip.Application.Abstractions;
 
 public interface ICustomValidator<T, in TProperty>
 {

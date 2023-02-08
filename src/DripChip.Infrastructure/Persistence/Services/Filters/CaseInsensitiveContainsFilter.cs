@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Infrastructure.Persistence.Services.Filters;

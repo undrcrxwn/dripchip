@@ -1,4 +1,4 @@
-using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions;
 
 namespace DripChip.Application.Extensions;
 

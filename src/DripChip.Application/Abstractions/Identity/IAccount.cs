@@ -1,3 +1,5 @@
+using System.Security.Principal;
+
 namespace DripChip.Application.Abstractions.Identity;
 
 public interface IAccount

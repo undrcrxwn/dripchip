@@ -1,5 +1,5 @@
 using System.Reflection;
-using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;

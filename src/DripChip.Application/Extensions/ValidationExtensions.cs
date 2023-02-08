@@ -1,4 +1,4 @@
-using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions;
 using FluentValidation;
 
 namespace DripChip.Application.Extensions;

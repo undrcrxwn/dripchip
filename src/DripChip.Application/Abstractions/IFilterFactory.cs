@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace DripChip.Application.Abstractions.Common;
+namespace DripChip.Application.Abstractions;
 
 public interface IFilterFactory
 {

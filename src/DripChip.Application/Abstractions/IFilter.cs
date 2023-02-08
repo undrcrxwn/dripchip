@@ -1,4 +1,4 @@
-namespace DripChip.Application.Abstractions.Common;
+namespace DripChip.Application.Abstractions;
 
 public interface IFilter<T>
 {

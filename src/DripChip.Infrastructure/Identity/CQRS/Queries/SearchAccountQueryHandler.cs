@@ -1,4 +1,4 @@
-using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions;
 using DripChip.Application.Extensions;
 using DripChip.Application.Features.Accounts.Queries.Search;
 using Mapster;
