@@ -15,6 +15,7 @@ public class RegisterAccountCommandValidator : AbstractValidator<RegisterAccount
             .NotEmpty();
 
         RuleFor(x => x.Email)
+            .EmailAddress()
             .NotEmpty();
         
         RuleFor(x => x.Password)

@@ -18,6 +18,7 @@ public class UpdateAccountCommandValidator : AbstractValidator<UpdateAccountComm
             .NotEmpty();
 
         RuleFor(x => x.Email)
+            .EmailAddress()
             .NotEmpty();
 
         RuleFor(x => x.Password)
