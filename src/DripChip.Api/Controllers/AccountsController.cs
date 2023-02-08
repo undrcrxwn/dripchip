@@ -1,13 +1,14 @@
+using DripChip.Application.Abstractions;
 using DripChip.Application.Features.Accounts.Commands.Register;
 using DripChip.Application.Features.Accounts.Commands.Update;
 using DripChip.Application.Features.Accounts.Queries.GetById;
 using DripChip.Application.Features.Accounts.Queries.Search;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;
 
-[Route("[controller]")]
 public class AccountsController : ApiControllerBase
 {
     private readonly IMediator _mediator;
@@ -30,7 +31,7 @@ public class AccountsController : ApiControllerBase
     public async Task<IEnumerable<SearchAccountResponse>> Search([FromQuery] SearchAccountQuery query) =>
         await _mediator.Send(query);
 
-    [HttpPut("{accountId}")]
+    [HttpPut("{accountId}"), Authorize]
     public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromQuery] UpdateAccountCommand command) =>
         await _mediator.Send(command with { AccountId = accountId });
 }

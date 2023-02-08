@@ -29,5 +29,5 @@ services:
     depends_on:
       - webapi
     environment:
-      SERVER_URL: http://webapi:80
+      SERVER_URL: http://webapi:80/api
       STAGE: all
