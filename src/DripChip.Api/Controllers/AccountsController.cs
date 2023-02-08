@@ -1,3 +1,4 @@
+using DripChip.Api.Attributes;
 using DripChip.Application.Abstractions;
 using DripChip.Application.Features.Accounts.Commands.Register;
 using DripChip.Application.Features.Accounts.Commands.Update;
@@ -16,7 +17,7 @@ public class AccountsController : ApiControllerBase
     public AccountsController(IMediator mediator) =>
         _mediator = mediator;
 
-    [HttpPost("~/registration")]
+    [HttpPost, ApiRoute("~/registration")]
     public async Task<IActionResult> Register([FromBody] RegisterAccountCommand command)
     {
         var response = await _mediator.Send(command);

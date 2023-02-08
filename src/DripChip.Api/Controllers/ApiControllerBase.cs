@@ -1,9 +1,10 @@
+using DripChip.Api.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;
 
-[ApiController, Route("api/[controller]")]
+[ApiController, ApiRoute("[controller]")]
 public abstract class ApiControllerBase : Controller
 {
     private ISender? _mediator;
