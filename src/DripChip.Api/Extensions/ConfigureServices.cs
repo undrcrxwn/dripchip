@@ -1,6 +1,7 @@
 using DripChip.Api.Filters;
 using DripChip.Api.Policies;
 using DripChip.Api.Services;
+using DripChip.Application.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -12,6 +13,7 @@ public static class ConfigureServices
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services
+            .AddScoped<ICurrentUserProvider, CurrentUserProvider>()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddHealthChecks();
