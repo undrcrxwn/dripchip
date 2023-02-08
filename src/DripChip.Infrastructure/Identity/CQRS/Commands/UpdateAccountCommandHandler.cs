@@ -1,7 +1,6 @@
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Commands.Update;
 using DripChip.Infrastructure.Identity.Extensions;
-using DripChip.Infrastructure.Identity.Services;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -17,9 +16,6 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
     
     public async Task<UpdateAccountResponse> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
     {
-        Application.Abstractions.Identity.IPasswordValidator<UpdateAccountCommand> v =
-            new Identity.Services.PasswordValidator<UpdateAccountCommand>(null!);
-        
         var account =
             await _userManager.FindByIdAsync(request.AccountId.ToString())
             ?? throw new NotFoundException();

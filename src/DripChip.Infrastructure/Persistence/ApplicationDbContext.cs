@@ -1,5 +1,3 @@
-using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Common;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
