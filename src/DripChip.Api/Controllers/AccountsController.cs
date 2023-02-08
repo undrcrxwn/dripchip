@@ -1,5 +1,4 @@
 using DripChip.Api.Attributes;
-using DripChip.Application.Abstractions;
 using DripChip.Application.Features.Accounts.Commands.Delete;
 using DripChip.Application.Features.Accounts.Commands.Register;
 using DripChip.Application.Features.Accounts.Commands.Update;
