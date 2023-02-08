@@ -1,5 +1,6 @@
 using DripChip.Api.Attributes;
 using DripChip.Application.Abstractions;
+using DripChip.Application.Features.Accounts.Commands.Delete;
 using DripChip.Application.Features.Accounts.Commands.Register;
 using DripChip.Application.Features.Accounts.Commands.Update;
 using DripChip.Application.Features.Accounts.Queries.GetById;
@@ -35,4 +36,8 @@ public class AccountsController : ApiControllerBase
     [HttpPut("{accountId}"), Authorize]
     public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromQuery] UpdateAccountCommand command) =>
         await _mediator.Send(command with { AccountId = accountId });
+    
+    [HttpDelete("{accountId}"), Authorize]
+    public async Task Delete([FromRoute] int accountId) =>
+        await _mediator.Send(new DeleteAccountCommand(accountId));
 }
