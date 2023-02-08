@@ -1,6 +1,7 @@
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Commands.Update;
 using DripChip.Infrastructure.Identity.Extensions;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -27,6 +28,6 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
         // Implicitly calls UpdateUserAsync(account)
         await _userManager.SetPasswordAsync(account, request.Password);
 
-        return new UpdateAccountResponse(account.Id, account.FirstName, account.LastName, account.Email);
+        return account.Adapt<UpdateAccountResponse>();
     }
 }

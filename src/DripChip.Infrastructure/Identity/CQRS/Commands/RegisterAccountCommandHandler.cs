@@ -1,5 +1,6 @@
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Commands.Register;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -32,6 +33,6 @@ public class RegisterAccountCommandHandler : IRequestHandler<RegisterAccountComm
         if (!result.Succeeded)
             throw new ValidationException(result.Errors, nameof(request.Password));
 
-        return new RegisterAccountResponse(account.Id, account.FirstName, account.LastName, account.Email);
+        return account.Adapt<RegisterAccountResponse>();
     }
 }

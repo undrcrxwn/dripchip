@@ -1,5 +1,6 @@
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Queries.GetById;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,7 +19,6 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, G
             await _userManager.FindByIdAsync(request.AccountId.ToString())
             ?? throw new NotFoundException();
 
-        return new GetAccountByIdResponse(
-            account.Id, account.FirstName, account.LastName, account.Email!);
+        return account.Adapt<GetAccountByIdResponse>();
     }
 }
