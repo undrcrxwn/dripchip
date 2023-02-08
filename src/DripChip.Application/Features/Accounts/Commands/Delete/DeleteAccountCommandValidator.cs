@@ -1,3 +1,4 @@
+using DripChip.Application.Extensions;
 using FluentValidation;
 
 namespace DripChip.Application.Features.Accounts.Commands.Delete;
@@ -7,6 +8,6 @@ public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountComm
     public DeleteAccountCommandValidator()
     {
         RuleFor(x => x.AccountId)
-            .GreaterThan(0);
+            .AccountId();
     }
 }

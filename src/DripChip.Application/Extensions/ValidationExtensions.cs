@@ -10,4 +10,8 @@ public static class ValidationExtensions
         ICustomValidator<T, TProperty> customValidator) =>
         ruleBuilder.CustomAsync(async (property, context, _) =>
             await customValidator.ValidateAsync(context, property));
+
+    public static IRuleBuilder<T, int> AccountId<T>(
+        this IRuleBuilder<T, int> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
 }

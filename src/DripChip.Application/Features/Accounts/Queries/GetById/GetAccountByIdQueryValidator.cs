@@ -1,3 +1,4 @@
+using DripChip.Application.Extensions;
 using FluentValidation;
 
 namespace DripChip.Application.Features.Accounts.Queries.GetById;
@@ -7,6 +8,6 @@ public class GetAccountByIdQueryValidator : AbstractValidator<GetAccountByIdQuer
     public GetAccountByIdQueryValidator()
     {
         RuleFor(x => x.AccountId)
-            .GreaterThan(0);
+            .AccountId();
     }
 }

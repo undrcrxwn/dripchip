@@ -9,7 +9,7 @@ public class UpdateAccountCommandValidator : AbstractValidator<UpdateAccountComm
     public UpdateAccountCommandValidator(IPasswordValidator<UpdateAccountCommand> passwordValidator)
     {
         RuleFor(x => x.AccountId)
-            .GreaterThan(0);
+            .AccountId();
         
         RuleFor(x => x.FirstName)
             .NotEmpty();
