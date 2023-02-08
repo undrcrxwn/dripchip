@@ -1,7 +1,9 @@
+using System.Reflection;
 using DripChip.Application.Abstractions.Common;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,10 +15,12 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        var assembly = Assembly.GetExecutingAssembly();
         services
+            .AddMediatR(assembly)
             .AddHostedService<DatabaseInitializer>()
-            .AddScoped<IAccountService, AccountService>()
-            .AddSingleton<IFilterFactory, FilterFactory>();
+            .AddSingleton<IFilterFactory, FilterFactory>()
+            .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
         
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));

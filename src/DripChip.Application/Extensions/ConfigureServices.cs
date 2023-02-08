@@ -1,4 +1,5 @@
 using System.Reflection;
+using DripChip.Application.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ public static class ConfigureServices
         var assembly = Assembly.GetExecutingAssembly();
         return services
             .AddMediatR(assembly)
-            .AddValidatorsFromAssembly(assembly);
+            .AddValidatorsFromAssembly(assembly)
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     }
 }

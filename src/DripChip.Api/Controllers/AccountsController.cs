@@ -1,10 +1,8 @@
-using DripChip.Application.Abstractions.Common;
-using DripChip.Application.Features.Accounts.Get;
-using DripChip.Application.Features.Accounts.Get.ById;
-using DripChip.Application.Features.Accounts.Register;
-using DripChip.Application.Features.Accounts.Search;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+using DripChip.Application.Features.Accounts.Commands.Register;
+using DripChip.Application.Features.Accounts.Commands.Update;
+using DripChip.Application.Features.Accounts.Queries.GetById;
+using DripChip.Application.Features.Accounts.Queries.Search;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;
@@ -12,24 +10,24 @@ namespace DripChip.Api.Controllers;
 [Route("[controller]")]
 public class AccountsController : ApiControllerBase
 {
-    private readonly IAccountService _accounts;
+    private readonly IMediator _mediator;
 
-    public AccountsController(IAccountService accounts) =>
-        _accounts = accounts;
+    public AccountsController(IMediator mediator) =>
+        _mediator = mediator;
 
     [HttpPost("~/registration")]
-    public async Task<RegisterAccountResponse> Register([FromBody] RegisterAccountRequest request) =>
-        await _accounts.RegisterAsync(request);
+    public async Task<RegisterAccountResponse> Register([FromBody] RegisterAccountCommand command) =>
+        await _mediator.Send(command);
 
     [HttpGet("{accountId}")]
-    public async Task<AccountResponse> GetById([FromRoute] int accountId)
-    {
-        var request = new GetAccountByIdRequest { AccountId = accountId };
-        await new GetAccountByIdRequestValidator().ValidateAndThrowAsync(request);
-        return await _accounts.GetByIdAsync(request);
-    }
+    public async Task<GetAccountByIdResponse> GetById([FromRoute] int accountId) =>
+        await _mediator.Send(new GetAccountByIdQuery(accountId));
 
     [HttpGet("[action]")]
-    public async Task<IEnumerable<AccountResponse>> Search([FromQuery] SearchAccountRequest request) =>
-        await _accounts.SearchAsync(request);
+    public async Task<IEnumerable<SearchAccountResponse>> Search([FromQuery] SearchAccountQuery query) =>
+        await _mediator.Send(query);
+
+    [HttpPut("{accountId}")]
+    public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromQuery] UpdateAccountCommand command) =>
+        await _mediator.Send(command with { AccountId = accountId });
 }

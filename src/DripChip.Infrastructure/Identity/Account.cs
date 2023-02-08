@@ -1,4 +1,5 @@
 using DripChip.Application.Abstractions.Common;
+using DripChip.Application.Abstractions.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Infrastructure.Identity;

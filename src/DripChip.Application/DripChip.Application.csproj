@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Features\Accounts\Commands" />
       <Folder Include="Features\Animals" />
     </ItemGroup>
 
