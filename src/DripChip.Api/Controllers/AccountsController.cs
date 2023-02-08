@@ -16,8 +16,11 @@ public class AccountsController : ApiControllerBase
         _mediator = mediator;
 
     [HttpPost("~/registration")]
-    public async Task<RegisterAccountResponse> Register([FromBody] RegisterAccountCommand command) =>
-        await _mediator.Send(command);
+    public async Task<IActionResult> Register([FromBody] RegisterAccountCommand command)
+    {
+        var response = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);
+    }
 
     [HttpGet("{accountId}")]
     public async Task<GetAccountByIdResponse> GetById([FromRoute] int accountId) =>
