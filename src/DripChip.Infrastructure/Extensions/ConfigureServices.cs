@@ -1,6 +1,7 @@
 using System.Reflection;
 using DripChip.Application.Abstractions;
 using DripChip.Infrastructure.Identity;
+using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;
 using MediatR;
@@ -20,6 +21,7 @@ public static class ConfigureServices
             .AddMediatR(assembly)
             .AddHostedService<DatabaseInitializer>()
             .AddSingleton<IFilterFactory, FilterFactory>()
+            .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
         
         services.AddDbContext<ApplicationDbContext>(options =>

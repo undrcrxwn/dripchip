@@ -52,7 +52,12 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         if (account is null)
             return AuthenticateResult.Fail("The specified credentials are invalid.");
 
-        var claims = new[] { new Claim(ClaimTypes.Name, email) };
+        var claims = new Claim[]
+        {
+            new(ClaimTypes.NameIdentifier, account.Id.ToString(), ClaimValueTypes.Integer),
+            new(ClaimTypes.Name, account.UserName!)
+        };
+        
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new GenericPrincipal(identity, roles: null);
         var ticket = new AuthenticationTicket(principal, Scheme.Name);

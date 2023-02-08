@@ -30,11 +30,10 @@ public static class ConfigureServices
                 displayName: "Basic authentication",
                 configureOptions: null);
 
-        services.AddAuthorization(options => options
-            .AddPolicy("BasicAuthentication",
-                new AuthorizationPolicyBuilder("BasicAuthentication")
-                    .RequireAuthenticatedUser()
-                    .Build()));
+        services.AddAuthorization(options => options.DefaultPolicy =
+            new AuthorizationPolicyBuilder("BasicAuthentication")
+                .RequireAuthenticatedUser()
+                .Build());
 
         return services;
     }
