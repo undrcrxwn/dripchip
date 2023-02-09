@@ -3,7 +3,7 @@ using MediatR;
 namespace DripChip.Application.Features.Accounts.Commands.Update;
 
 public record UpdateAccountCommand(
-    int AccountId,
+    int Id,
     string FirstName,
     string LastName,
     string Email,

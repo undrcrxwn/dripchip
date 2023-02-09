@@ -21,11 +21,11 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
 
     public async Task<UpdateAccountResponse> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
     {
-        if (request.AccountId != _issuer.AccountId)
+        if (request.Id != _issuer.AccountId)
             throw new ForbiddenException();
         
         var account =
-            await _userManager.FindByIdAsync(request.AccountId.ToString())
+            await _userManager.FindByIdAsync(request.Id.ToString())
             ?? throw new NotFoundException();
 
         account.FirstName = request.FirstName;

@@ -1,5 +1,6 @@
 using System.Reflection;
 using DripChip.Application.Abstractions;
+using DripChip.Application.Abstractions.Persistence;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;
@@ -24,7 +25,7 @@ public static class ConfigureServices
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
         
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services

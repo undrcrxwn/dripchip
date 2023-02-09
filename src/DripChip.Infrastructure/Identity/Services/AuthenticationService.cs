@@ -13,14 +13,6 @@ public class AuthenticationService : IAuthenticationService
     
     public async Task<IAccount?> AuthenticateAsync(string username, string password)
     {
-        Console.WriteLine("============================================");
-        Console.WriteLine("============================================");
-        Console.WriteLine("============================================");
-        Console.WriteLine($"{username} --- {password}");
-        Console.WriteLine("============================================");
-        Console.WriteLine("============================================");
-        Console.WriteLine("============================================");
-        
         var account = await _userManager.FindByNameAsync(username);
         if (account is null)
             return null;

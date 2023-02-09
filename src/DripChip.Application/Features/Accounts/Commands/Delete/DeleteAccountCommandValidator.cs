@@ -7,7 +7,7 @@ public class DeleteAccountCommandValidator : AbstractValidator<DeleteAccountComm
 {
     public DeleteAccountCommandValidator()
     {
-        RuleFor(x => x.AccountId)
+        RuleFor(x => x.Id)
             .AccountId();
     }
 }

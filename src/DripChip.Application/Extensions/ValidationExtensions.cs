@@ -14,4 +14,20 @@ public static class ValidationExtensions
     public static IRuleBuilder<T, int> AccountId<T>(
         this IRuleBuilder<T, int> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, long> PointId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, double> Latitude<T>(
+        this IRuleBuilder<T, double> ruleBuilder) =>
+        ruleBuilder
+            .GreaterThanOrEqualTo(-90)
+            .LessThanOrEqualTo(90);
+
+    public static IRuleBuilder<T, double> Longitude<T>(
+        this IRuleBuilder<T, double> ruleBuilder) =>
+        ruleBuilder
+            .GreaterThanOrEqualTo(-180)
+            .LessThanOrEqualTo(180);
 }

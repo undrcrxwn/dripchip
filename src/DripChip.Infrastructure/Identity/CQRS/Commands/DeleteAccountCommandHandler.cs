@@ -19,10 +19,10 @@ public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommand>
 
     public async Task<Unit> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
     {
-        if (request.AccountId != _issuer.AccountId)
+        if (request.Id != _issuer.AccountId)
             throw new ForbiddenException();
 
-        var account = await _userManager.FindByIdAsync(request.AccountId.ToString());
+        var account = await _userManager.FindByIdAsync(request.Id.ToString());
         await _userManager.DeleteAsync(account!);
         
         return Unit.Value;
