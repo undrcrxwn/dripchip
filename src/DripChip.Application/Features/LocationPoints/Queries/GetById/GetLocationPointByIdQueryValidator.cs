@@ -8,6 +8,6 @@ public class GetLocationPointByIdQueryValidator : AbstractValidator<GetLocationP
     public GetLocationPointByIdQueryValidator()
     {
         RuleFor(x => x.Id)
-            .PointId();
+            .LocationPointId();
     }
 }

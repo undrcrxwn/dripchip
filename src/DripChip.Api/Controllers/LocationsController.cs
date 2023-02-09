@@ -10,10 +10,10 @@ namespace DripChip.Api.Controllers;
 public class LocationsController : ApiControllerBase
 {
     [HttpGet("{pointId}")]
-    public async Task<GetLocationPointByIdResponse> GetById([FromRoute] int pointId) =>
+    public async Task<GetLocationPointByIdResponse> GetById([FromRoute] long pointId) =>
         await Mediator.Send(new GetLocationPointByIdQuery(pointId));
 
-    [HttpPost]
+    [HttpPost, Authorize]
     public async Task<IActionResult> Create([FromBody] CreateLocationPointCommand command)
     {
         var response = await Mediator.Send(command);

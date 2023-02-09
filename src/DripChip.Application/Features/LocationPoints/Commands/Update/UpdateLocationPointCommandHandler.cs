@@ -16,13 +16,20 @@ public class UpdateLocationPointCommandHandler : IRequestHandler<UpdateLocationP
 
     public async Task<UpdateLocationPointResponse> Handle(UpdateLocationPointCommand request, CancellationToken cancellationToken)
     {
-        var exists = await _context.LocationPoints.AnyAsync(x => x.Id == request.Id);
+        var exists = await _context.LocationPoints.AnyAsync(x =>
+            x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (!exists)
             throw new NotFoundException();
 
+        var sameExists = await _context.LocationPoints.AnyAsync(x =>
+            x.Latitude == request.Latitude && x.Longitude == request.Longitude, cancellationToken);
+
+        if (sameExists)
+            throw new AlreadyExistsException();
+
         var entity = request.Adapt<LocationPoint>();
-        _context.LocationPoints.Update(request.Adapt<LocationPoint>());
+        _context.LocationPoints.Update(entity);
         await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Adapt<UpdateLocationPointResponse>();

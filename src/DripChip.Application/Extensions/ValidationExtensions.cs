@@ -15,7 +15,11 @@ public static class ValidationExtensions
         this IRuleBuilder<T, int> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
 
-    public static IRuleBuilder<T, long> PointId<T>(
+    public static IRuleBuilder<T, long> LocationPointId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+    
+    public static IRuleBuilder<T, long> AnimalTypeId<T>(
         this IRuleBuilder<T, long> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
 

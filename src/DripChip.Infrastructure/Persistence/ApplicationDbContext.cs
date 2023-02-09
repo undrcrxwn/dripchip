@@ -12,6 +12,8 @@ public class ApplicationDbContext :
     IApplicationDbContext
 {
     public DbSet<LocationPoint> LocationPoints => Set<LocationPoint>();
+    public DbSet<AnimalType> AnimalTypes => Set<AnimalType>();
+    public DbSet<Animal> Animals => Set<Animal>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }

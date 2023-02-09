@@ -16,14 +16,13 @@ public class CreateLocationPointCommandHandler : IRequestHandler<CreateLocationP
 
     public async Task<CreateLocationPointResponse> Handle(CreateLocationPointCommand request, CancellationToken cancellationToken)
     {
-        var entity = request.Adapt<LocationPoint>();
-
         var sameExists = await _context.LocationPoints.AnyAsync(x =>
             x.Latitude == request.Latitude && x.Longitude == request.Longitude);
 
         if (sameExists)
             throw new AlreadyExistsException();
         
+        var entity = request.Adapt<LocationPoint>();
         await _context.LocationPoints.AddAsync(entity);
         await _context.SaveChangesAsync(cancellationToken);
         

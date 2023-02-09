@@ -8,7 +8,7 @@ public class UpdateLocationPointCommandValidator : AbstractValidator<UpdateLocat
     public UpdateLocationPointCommandValidator()
     {
         RuleFor(x => x.Id)
-            .PointId();
+            .LocationPointId();
         
         RuleFor(x => x.Latitude)
             .Latitude();

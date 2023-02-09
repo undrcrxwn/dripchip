@@ -8,6 +8,6 @@ public class DeleteLocationPointCommandValidator : AbstractValidator<DeleteLocat
     public DeleteLocationPointCommandValidator()
     {
         RuleFor(x => x.Id)
-            .PointId();
+            .LocationPointId();
     }
 }
