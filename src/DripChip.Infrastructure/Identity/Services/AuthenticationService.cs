@@ -1,5 +1,6 @@
 using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
+using DripChip.Domain.Abstractions;
 using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Infrastructure.Identity.Services;

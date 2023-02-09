@@ -18,7 +18,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Animals" />
+      <Folder Include="Features\Animals\Commands\AddType" />
+      <Folder Include="Features\Animals\Commands\Create" />
+      <Folder Include="Features\Animals\Commands\Delete" />
+      <Folder Include="Features\Animals\Commands\RemoveType" />
+      <Folder Include="Features\Animals\Commands\ReplaceType" />
+      <Folder Include="Features\Animals\Commands\Update" />
     </ItemGroup>
 
     <ItemGroup>

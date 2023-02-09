@@ -1,3 +1,4 @@
+using System.Numerics;
 using DripChip.Application.Abstractions;
 using FluentValidation;
 
@@ -11,6 +12,11 @@ public static class ValidationExtensions
         ruleBuilder.CustomAsync(async (property, context, _) =>
             await customValidator.ValidateAsync(context, property));
 
+    public static IRuleBuilder<T, string> IsInEnum<T>(
+        this IRuleBuilder<T, string> ruleBuilder, Type enumType, bool ignoreCase = true) =>
+        ruleBuilder.Must(x =>
+            Enum.TryParse(enumType, x, ignoreCase, out _));
+
     public static IRuleBuilder<T, int> AccountId<T>(
         this IRuleBuilder<T, int> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
@@ -18,8 +24,12 @@ public static class ValidationExtensions
     public static IRuleBuilder<T, long> LocationPointId<T>(
         this IRuleBuilder<T, long> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
-    
+
     public static IRuleBuilder<T, long> AnimalTypeId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+    
+    public static IRuleBuilder<T, long> AnimalId<T>(
         this IRuleBuilder<T, long> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
 

@@ -1,4 +1,4 @@
-namespace DripChip.Application.Abstractions.Identity;
+namespace DripChip.Domain.Abstractions;
 
 public interface IAccount
 {

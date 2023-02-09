@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace DripChip.Api.Policies;
+namespace DripChip.Api.Routing;
 
 public class KebabCaseParameterPolicy : IOutboundParameterTransformer
 {

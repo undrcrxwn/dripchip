@@ -27,6 +27,7 @@ public class SearchAccountQueryHandler : IRequestHandler<SearchAccountQuery, IEn
             .Where(_filterFactory.CreateCaseInsensitiveContainsFilter<Account>(x => x.LastName, request.LastName))
             .Where(_filterFactory.CreateCaseInsensitiveContainsFilter<Account>(x => x.Email!, request.Email))
             // Pagination
+            .OrderBy(x => x.Id)
             .Skip(request.From)
             .Take(request.Size);
 
