@@ -23,7 +23,10 @@ public class UpdateLocationPointCommandHandler : IRequestHandler<UpdateLocationP
             throw new NotFoundException();
 
         var sameExists = await _context.LocationPoints.AnyAsync(x =>
-            x.Latitude == request.Latitude && x.Longitude == request.Longitude, cancellationToken);
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            x.Latitude == request.Latitude &&
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            x.Longitude == request.Longitude, cancellationToken);
 
         if (sameExists)
             throw new AlreadyExistsException();

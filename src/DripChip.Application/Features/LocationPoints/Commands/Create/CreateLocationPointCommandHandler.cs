@@ -17,7 +17,10 @@ public class CreateLocationPointCommandHandler : IRequestHandler<CreateLocationP
     public async Task<CreateLocationPointResponse> Handle(CreateLocationPointCommand request, CancellationToken cancellationToken)
     {
         var sameExists = await _context.LocationPoints.AnyAsync(x =>
-            x.Latitude == request.Latitude && x.Longitude == request.Longitude);
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            x.Latitude == request.Latitude &&
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            x.Longitude == request.Longitude);
 
         if (sameExists)
             throw new AlreadyExistsException();
