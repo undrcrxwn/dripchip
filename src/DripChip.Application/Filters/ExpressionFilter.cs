@@ -5,11 +5,11 @@ namespace DripChip.Application.Filters;
 
 public class ExpressionFilter<T> : IFilter<T>
 {
-    private readonly Expression<Func<T, bool>> _expression;
+    public readonly Expression<Func<T, bool>> PredicateExpression;
 
-    public ExpressionFilter(Expression<Func<T, bool>> expression) =>
-        _expression = expression;
+    public ExpressionFilter(Expression<Func<T, bool>> predicateExpression) =>
+        PredicateExpression = predicateExpression;
 
     public IQueryable<T> Apply(IQueryable<T> items) =>
-        items.Where(_expression);
+        items.Where(PredicateExpression);
 }

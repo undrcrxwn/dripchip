@@ -32,7 +32,7 @@ public class SearchAccountQueryHandler : IRequestHandler<SearchAccountQuery, IEn
 
         var accounts =
             from user in _users.Users.Where(userFilter)
-            from account in _context.Accounts.Where(accountFilter)
+            join account in _context.Accounts.Where(accountFilter) on user.Id equals account.Id
             select new { User = user, Account = account };
 
         // Pagination
