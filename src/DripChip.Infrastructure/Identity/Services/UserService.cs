@@ -50,6 +50,12 @@ public class UserService : IUserService
     public async Task DeleteAsync(IUser user) =>
         await _userManager.DeleteAsync((User)user);
 
+    public async Task SetUsernameAsync(IUser user, string username) =>
+        await _userManager.SetUserNameAsync((User)user, username);
+    
+    public async Task SetEmailAsync(IUser user, string email) =>
+        await _userManager.SetEmailAsync((User)user, email);
+    
     public async Task SetPasswordAsync(IUser user, string password) =>
         await _userManager.SetPasswordAsync((User)user, password);
     

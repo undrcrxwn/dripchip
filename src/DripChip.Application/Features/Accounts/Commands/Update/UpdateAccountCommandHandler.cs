@@ -34,7 +34,9 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
 
         account.FirstName = request.FirstName;
         account.LastName = request.LastName;
-        
+
+        await _users.SetEmailAsync(user, request.Email);
+        await _users.SetUsernameAsync(user, request.Email);
         await _users.SetPasswordAsync(user, request.Password);
         await _context.SaveChangesAsync(cancellationToken);
         

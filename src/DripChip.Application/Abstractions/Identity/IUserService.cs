@@ -13,6 +13,9 @@ public interface IUserService
     public Task DeleteAsync(int userId);
     public Task DeleteAsync(IUser user);
 
+    public Task SetUsernameAsync(IUser user, string username);
+    public Task SetEmailAsync(IUser user, string email);
     public Task SetPasswordAsync(IUser user, string password);
+
     public Task SignOutAsync();
 }
