@@ -1,4 +1,3 @@
-using DripChip.Domain.Common;
 #pragma warning disable CS8618
 
 namespace DripChip.Domain.Entities;

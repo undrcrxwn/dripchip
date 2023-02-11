@@ -40,7 +40,11 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         var exception = (ValidationException)context.Exception;
 
-        var details = new ValidationProblemDetails(exception.Errors)
+        var errors = exception.Errors.ToDictionary(
+            error => error.Key,
+            error => error.Value.ToArray());
+        
+        var details = new ValidationProblemDetails(errors)
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
         };

@@ -1,3 +1,4 @@
+using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
@@ -6,9 +7,9 @@ namespace DripChip.Infrastructure.Identity.Services;
 
 public class PasswordValidator<T> : Application.Abstractions.Identity.IPasswordValidator<T>
 {
-    private readonly UserManager<Account> _userManager;
+    private readonly UserManager<User> _userManager;
 
-    public PasswordValidator(UserManager<Account> userManager) =>
+    public PasswordValidator(UserManager<User> userManager) =>
         _userManager = userManager;
 
     public async Task ValidateAsync(ValidationContext<T> context, string value)
@@ -18,9 +19,11 @@ public class PasswordValidator<T> : Application.Abstractions.Identity.IPasswordV
             .ToArray();
 
         var validationResults = await Task.WhenAll(validationTasks);
-        var validationErrors = validationResults.SelectMany(result => result.Errors).ToArray();
+        var validationErrors = validationResults
+            .SelectMany(result => result.Errors)
+            .ToArray();
 
         if (validationErrors.Any())
-            throw new ValidationException(validationErrors, context.DisplayName);
+            throw new ValidationException(validationErrors.ToValidationFailures(context.DisplayName));
     }
 }

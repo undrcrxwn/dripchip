@@ -48,14 +48,14 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
         var password = credentials[1];
 
         // Authenticate user
-        var account = await _authenticationService.AuthenticateAsync(email, password);
-        if (account is null)
+        var user = await _authenticationService.AuthenticateAsync(email, password);
+        if (user is null)
             return AuthenticateResult.Fail("The specified credentials are invalid.");
 
         var claims = new Claim[]
         {
-            new(ClaimTypes.NameIdentifier, account.Id.ToString(), ClaimValueTypes.Integer),
-            new(ClaimTypes.Name, account.UserName!)
+            new(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.Integer),
+            new(ClaimTypes.Name, user.UserName!)
         };
         
         var identity = new ClaimsIdentity(claims, Scheme.Name);

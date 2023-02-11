@@ -1,9 +1,12 @@
 using DripChip.Application.Abstractions.Identity;
-using DripChip.Domain.Abstractions;
 
 namespace DripChip.Application.Abstractions;
 
 public interface IAuthenticationService
 {
-    public Task<IAccount?> AuthenticateAsync(string username, string password);
+    /// <summary>
+    /// Authenticates user by credentials.
+    /// </summary>
+    /// <returns>User ID if the specified credentials are valid, otherwise null.</returns>
+    public Task<IUser?> AuthenticateAsync(string username, string password);
 }

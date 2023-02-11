@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace DripChip.Infrastructure.Persistence;
 
 public class ApplicationDbContext :
-    IdentityDbContext<Account, IdentityRole<int>, int>,
+    IdentityDbContext<User, IdentityRole<int>, int>,
     IApplicationDbContext
 {
+    public DbSet<Account> Accounts => Set<Account>();
     public DbSet<LocationPoint> LocationPoints => Set<LocationPoint>();
     public DbSet<AnimalType> AnimalTypes => Set<AnimalType>();
     public DbSet<Animal> Animals => Set<Animal>();

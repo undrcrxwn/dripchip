@@ -1,5 +1,3 @@
-using DripChip.Domain.Common;
-
 namespace DripChip.Domain.Entities;
 
 public class LocationPoint : EntityBase<long>

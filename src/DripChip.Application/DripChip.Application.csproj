@@ -14,12 +14,10 @@
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Features\Animals\Commands\AddType" />
-      <Folder Include="Features\Animals\Commands\Create" />
       <Folder Include="Features\Animals\Commands\Delete" />
       <Folder Include="Features\Animals\Commands\RemoveType" />
       <Folder Include="Features\Animals\Commands\ReplaceType" />

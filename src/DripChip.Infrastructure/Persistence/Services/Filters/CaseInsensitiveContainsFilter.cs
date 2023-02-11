@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using DripChip.Application.Abstractions;
+using DripChip.Application.Abstractions.Filtering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Infrastructure.Persistence.Services.Filters;
@@ -17,9 +18,10 @@ public class CaseInsensitiveContainsFilter<T> : IFilter<T>
 
     public IQueryable<T> Apply(IQueryable<T> items)
     {
+        // Lambda parameter of type T just like 'x' in 'T x => ...'
         var parameter = Expression.Parameter(typeof(T));
 
-        // Expression form of items.Where(item => EF.Functions.ILike(selector(item), pattern))
+        // Expression translation for 'items.Where(item => EF.Functions.ILike(selector(item), pattern))'
         var predicate =
             Expression.Lambda<Func<T, bool>>(
                 Expression.Call(

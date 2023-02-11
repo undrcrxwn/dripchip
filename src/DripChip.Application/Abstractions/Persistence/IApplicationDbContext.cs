@@ -5,6 +5,7 @@ namespace DripChip.Application.Abstractions.Persistence;
 
 public interface IApplicationDbContext
 {
+    public DbSet<Account> Accounts { get; }
     public DbSet<LocationPoint> LocationPoints { get; }
     public DbSet<AnimalType> AnimalTypes { get; }
     public DbSet<Animal> Animals { get; }

@@ -1,5 +1,6 @@
 using System.Reflection;
 using DripChip.Application.Abstractions;
+using DripChip.Application.Abstractions.Filtering;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
@@ -29,7 +30,7 @@ public static class ConfigureServices
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services
-            .AddIdentity<Account, IdentityRole<int>>()
+            .AddIdentity<User, IdentityRole<int>>()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 

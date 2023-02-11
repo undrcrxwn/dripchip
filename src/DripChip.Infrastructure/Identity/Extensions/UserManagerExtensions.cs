@@ -4,9 +4,9 @@ namespace DripChip.Infrastructure.Identity.Extensions;
 
 public static class UserManagerExtensions
 {
-    public static async Task<IdentityResult> SetPasswordAsync(this UserManager<Account> userManager, Account account, string newPassword)
+    public static async Task<IdentityResult> SetPasswordAsync(this UserManager<User> userManager, User user, string newPassword)
     {
-        var token = await userManager.GeneratePasswordResetTokenAsync(account);
-        return await userManager.ResetPasswordAsync(account, token, newPassword);
+        var token = await userManager.GeneratePasswordResetTokenAsync(user);
+        return await userManager.ResetPasswordAsync(user, token, newPassword);
     }
 }

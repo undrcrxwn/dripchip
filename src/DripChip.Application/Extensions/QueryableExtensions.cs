@@ -1,4 +1,5 @@
 using DripChip.Application.Abstractions;
+using DripChip.Application.Abstractions.Filtering;
 
 namespace DripChip.Application.Extensions;
 

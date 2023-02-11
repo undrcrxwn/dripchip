@@ -1,6 +1,6 @@
 using DripChip.Api.Attributes;
+using DripChip.Application.Features.Accounts.Commands.Create;
 using DripChip.Application.Features.Accounts.Commands.Delete;
-using DripChip.Application.Features.Accounts.Commands.Register;
 using DripChip.Application.Features.Accounts.Commands.Update;
 using DripChip.Application.Features.Accounts.Queries.GetById;
 using DripChip.Application.Features.Accounts.Queries.Search;
@@ -12,7 +12,7 @@ namespace DripChip.Api.Controllers;
 public class AccountsController : ApiControllerBase
 {
     [HttpPost, ApiRoute("~/registration")]
-    public async Task<IActionResult> Register([FromBody] RegisterAccountCommand command)
+    public async Task<IActionResult> Register([FromBody] CreateAccountCommand command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);
