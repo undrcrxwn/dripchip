@@ -49,7 +49,7 @@ public static class ConfigureServices
                             Id = "basic"
                         }
                     },
-                    new string[] { }
+                    Array.Empty<string>()
                 }
             });
         });

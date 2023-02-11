@@ -15,7 +15,7 @@ public interface IFilter<T>
     /// Combines multiple filters into a single one with reversed filter invocation expression inside.
     /// Thus, Combine(a, b, c) would result in the expression filter x => c.Apply(b.Apply(a.Apply(x))).
     /// </summary>
-    /// <param name="filters">Filters to be combine.</param>
+    /// <param name="filters">Filters to be combined.</param>
     /// <exception cref="ArgumentException">The minimum count of filters is 2.</exception>
     public static IFilter<T> Combine(params IFilter<T>[] filters)
     {

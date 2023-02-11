@@ -23,13 +23,13 @@ public class SearchAccountQueryHandler : IRequestHandler<SearchAccountQuery, IEn
 
     public async Task<IEnumerable<SearchAccountResponse>> Handle(SearchAccountQuery request, CancellationToken cancellationToken)
     {
+        // Filtering
         var userFilter = _filterFactory.CreateCaseInsensitiveContainsFilter<IUser>(user => user.Email!, request.Email);
 
         var accountFilter = IFilter<Account>.Combine(
             _filterFactory.CreateCaseInsensitiveContainsFilter<Account>(account => account.FirstName, request.FirstName),
             _filterFactory.CreateCaseInsensitiveContainsFilter<Account>(account => account.LastName, request.LastName));
 
-        // Filtering
         var accounts =
             from user in _users.Users.Where(userFilter)
             from account in _context.Accounts.Where(accountFilter)
