@@ -25,20 +25,40 @@ public static class ConfigureServices
             options.Filters.Add<ApiExceptionFilterAttribute>();
         });
 
-        services.AddSwaggerGen(options => options.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
+        services.AddSwaggerGen(options =>
         {
-            Description = "Basic Authentication",
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Scheme = "basic",
-            Type = SecuritySchemeType.Http
-        }));
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "DripChip API", Version = "v1" });
+
+            options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "basic",
+                In = ParameterLocation.Header,
+                Description = "Basic Authorization"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "basic"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });
 
         services
             .AddAuthentication("BasicAuthentication")
             .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(
                 authenticationScheme: "BasicAuthentication",
-                displayName: "Basic authentication",
+                displayName: "Basic Authentication",
                 configureOptions: null);
 
         services.AddAuthorization(options => options.DefaultPolicy =
