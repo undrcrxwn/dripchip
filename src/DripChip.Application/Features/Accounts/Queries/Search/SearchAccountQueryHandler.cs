@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using DripChip.Application.Abstractions.Filtering;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
@@ -24,7 +23,7 @@ public class SearchAccountQueryHandler : IRequestHandler<SearchAccountQuery, IEn
 
     public async Task<IEnumerable<SearchAccountResponse>> Handle(SearchAccountQuery request, CancellationToken cancellationToken)
     {
-        var userFilter = _filterFactory.CreateCaseInsensitiveContainsFilter<IUser>(user => user.Email, request.Email);
+        var userFilter = _filterFactory.CreateCaseInsensitiveContainsFilter<IUser>(user => user.Email!, request.Email);
 
         var accountFilter = IFilter<Account>.Combine(
             _filterFactory.CreateCaseInsensitiveContainsFilter<Account>(account => account.FirstName, request.FirstName),
@@ -43,7 +42,11 @@ public class SearchAccountQueryHandler : IRequestHandler<SearchAccountQuery, IEn
             .Take(request.Size);
 
         return await accounts
-            .Select(x => new SearchAccountResponse(x.User.Id, x.Account.FirstName, x.Account.LastName, x.User.Email))
+            .Select(x => new SearchAccountResponse(
+                x.User.Id,
+                x.Account.FirstName,
+                x.Account.LastName,
+                x.User.Email!))
             .ToListAsync(cancellationToken);
     }
 }

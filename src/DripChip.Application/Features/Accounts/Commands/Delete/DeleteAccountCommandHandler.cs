@@ -2,7 +2,6 @@ using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
-using DripChip.Domain.Entities;
 using MediatR;
 
 namespace DripChip.Application.Features.Accounts.Commands.Delete;
@@ -25,8 +24,12 @@ public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommand>
         if (request.Id != _issuer.AccountId)
             throw new ForbiddenException();
 
+        var account =
+            await _context.Accounts.FindAsync(request.Id)
+            ?? throw new NotFoundException();
+
+        _context.Accounts.Remove(account);
         await _users.DeleteAsync(request.Id);
-        _context.Accounts.Remove(new Account { Id = request.Id });
 
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

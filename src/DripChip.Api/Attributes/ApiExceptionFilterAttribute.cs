@@ -1,8 +1,8 @@
+using DripChip.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using DripChip.Application.Exceptions;
 
-namespace DripChip.Api.Filters;
+namespace DripChip.Api.Attributes;
 
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {

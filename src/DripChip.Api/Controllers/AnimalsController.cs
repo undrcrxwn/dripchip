@@ -23,11 +23,11 @@ public class AnimalsController : ApiControllerBase
         return CreatedAtAction(nameof(GetById), new { AnimalId = response.Id }, response);
     }
 
-    [HttpPut("{animalId}"), Authorize]
+    /*[HttpPut("{animalId}"), Authorize]
     public async Task<UpdateAnimalResponse> Update([FromRoute] long animalId, [FromBody] UpdateAnimalCommand command) =>
         await Mediator.Send(command with { Id = animalId });
     
     [HttpDelete("{animalId}"), Authorize]
     public async Task Delete([FromRoute] long animalId) =>
-        await Mediator.Send(new DeleteAnimalCommand(animalId));
+        await Mediator.Send(new DeleteAnimalCommand(animalId));*/
 }

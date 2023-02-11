@@ -38,8 +38,10 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         
         // Account creation
         var account = request.Adapt<Account>();
+        account.Id = user.Id;
         await _context.Accounts.AddAsync(account, cancellationToken);
 
+        await _context.SaveChangesAsync(cancellationToken);
         return new CreateAccountResponse(user.Id, account.FirstName, account.LastName, user.Email!);
     }
 }

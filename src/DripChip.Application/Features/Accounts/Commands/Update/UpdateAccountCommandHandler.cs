@@ -36,8 +36,12 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
         account.LastName = request.LastName;
         
         await _users.SetPasswordAsync(user, request.Password);
-
         await _context.SaveChangesAsync(cancellationToken);
-        return new UpdateAccountResponse(user.Id, account.FirstName, account.LastName, user.Email!);
+        
+        return new UpdateAccountResponse(
+            user.Id,
+            account.FirstName,
+            account.LastName,
+            user.Email!);
     }
 }

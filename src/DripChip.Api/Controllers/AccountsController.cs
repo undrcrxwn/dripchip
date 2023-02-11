@@ -29,8 +29,12 @@ public class AccountsController : ApiControllerBase
     [HttpPut("{accountId}"), Authorize]
     public async Task<UpdateAccountResponse> Update([FromRoute] int accountId, [FromBody] UpdateAccountCommand command) =>
         await Mediator.Send(command with { Id = accountId });
-    
+
     [HttpDelete("{accountId}"), Authorize]
-    public async Task Delete([FromRoute] int accountId) =>
+    public async Task Delete([FromRoute] int accountId)
+    {
         await Mediator.Send(new DeleteAccountCommand(accountId));
+        foreach (var cookie in Request.Cookies.Keys)
+            Response.Cookies.Delete(cookie);
+    }
 }

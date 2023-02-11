@@ -38,7 +38,7 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             return AuthenticateResult.Fail("Authorization code is not properly formatted.");
 
         // Decode authorization key
-        var encodedAuthorizationKey = match.Groups[1].Value;
+        var encodedAuthorizationKey = match.Groups.Values.Last().Value;
         var decodedAuthorizationKeyBytes = Convert.FromBase64String(encodedAuthorizationKey);
         var decodedAuthorizationKey = Encoding.UTF8.GetString(decodedAuthorizationKeyBytes);
 
@@ -57,11 +57,11 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
             new(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.Integer),
             new(ClaimTypes.Name, user.UserName!)
         };
-        
+
         var identity = new ClaimsIdentity(claims, Scheme.Name);
         var principal = new GenericPrincipal(identity, roles: null);
         var ticket = new AuthenticationTicket(principal, Scheme.Name);
-        
+
         return AuthenticateResult.Success(ticket);
     }
 }

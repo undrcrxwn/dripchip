@@ -1,6 +1,7 @@
 using System.Reflection;
 using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Filtering;
+using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
@@ -24,6 +25,7 @@ public static class ConfigureServices
             .AddHostedService<DatabaseInitializer>()
             .AddSingleton<IFilterFactory, FilterFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
+            .AddScoped<IUserService, UserService>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
         
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>

@@ -10,17 +10,16 @@ public class DeleteAnimalTypeCommandHandler : IRequestHandler<DeleteAnimalTypeCo
 
     public DeleteAnimalTypeCommandHandler(IApplicationDbContext context) =>
         _context = context;
-    
+
     public async Task<Unit> Handle(DeleteAnimalTypeCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.AnimalTypes.FindAsync(request.Id);
-
-        if (entity is null)
-            throw new NotFoundException();
+        var entity =
+            await _context.AnimalTypes.FindAsync(request.Id)
+            ?? throw new NotFoundException();
 
         _context.AnimalTypes.Remove(entity);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return Unit.Value;
     }
 }

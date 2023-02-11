@@ -26,6 +26,6 @@ public class GetAccountByIdQueryHandler : IRequestHandler<GetAccountByIdQuery, G
             await _context.Accounts.FindAsync(request.AccountId)
             ?? throw new NotFoundException();
 
-        return new GetAccountByIdResponse(user.Id, account.FirstName, account.LastName, user.Email);
+        return new GetAccountByIdResponse(user.Id, account.FirstName, account.LastName, user.Email!);
     }
 }

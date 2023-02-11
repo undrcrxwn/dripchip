@@ -10,17 +10,16 @@ public class DeleteLocationPointCommandHandler : IRequestHandler<DeleteLocationP
 
     public DeleteLocationPointCommandHandler(IApplicationDbContext context) =>
         _context = context;
-    
+
     public async Task<Unit> Handle(DeleteLocationPointCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.LocationPoints.FindAsync(request.Id);
-
-        if (entity is null)
-            throw new NotFoundException();
+        var entity =
+            await _context.LocationPoints.FindAsync(request.Id)
+            ?? throw new NotFoundException();
 
         _context.LocationPoints.Remove(entity);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return Unit.Value;
     }
 }
