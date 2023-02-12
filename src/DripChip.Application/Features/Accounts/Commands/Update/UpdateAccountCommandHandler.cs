@@ -23,11 +23,11 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
     {
         if (request.Id != _issuer.AccountId)
             throw new ForbiddenException();
-        
+
         var user =
             await _users.FindByIdAsync(request.Id)
             ?? throw new NotFoundException();
-        
+
         var account =
             await _context.Accounts.FindAsync(request.Id)
             ?? throw new NotFoundException();
@@ -39,7 +39,7 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand,
         await _users.SetUsernameAsync(user, request.Email);
         await _users.SetPasswordAsync(user, request.Password);
         await _context.SaveChangesAsync(cancellationToken);
-        
+
         return new UpdateAccountResponse(
             user.Id,
             account.FirstName,

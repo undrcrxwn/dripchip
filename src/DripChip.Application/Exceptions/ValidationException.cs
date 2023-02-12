@@ -12,11 +12,14 @@ public class ValidationException : Exception
     public ValidationException(IDictionary<string, IEnumerable<string>> errors) =>
         Errors = errors;
 
-    public ValidationException(IEnumerable<string> errorDescriptions, string propertyName)
+    public ValidationException(string propertyName, IEnumerable<string> errorDescriptions)
         : this(new Dictionary<string, IEnumerable<string>>
         {
             [propertyName] = errorDescriptions
         }) { }
+
+    public ValidationException(string propertyName, string errorDescriptions)
+        : this(propertyName, new[] { errorDescriptions }) { }
 
     public ValidationException(IEnumerable<ValidationFailure> failures) : this(failures
         .GroupBy(

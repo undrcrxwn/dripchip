@@ -1,4 +1,5 @@
 using DripChip.Application.Features.Animals.Commands.Create;
+using DripChip.Application.Features.Animals.Commands.Update;
 using DripChip.Application.Features.Animals.Queries.GetById;
 using DripChip.Application.Features.Animals.Queries.Search;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +14,7 @@ public class AnimalsController : ApiControllerBase
         await Mediator.Send(new GetAnimalByIdQuery(animalId));
     
     [HttpGet("[action]")]
-    public async Task<IEnumerable<SearchAnimalResponse>> Search([FromRoute] SearchAnimalQuery query) =>
+    public async Task<IEnumerable<SearchAnimalResponse>> Search([FromQuery] SearchAnimalQuery query) =>
         await Mediator.Send(query);
 
     [HttpPost, Authorize]
@@ -23,11 +24,11 @@ public class AnimalsController : ApiControllerBase
         return CreatedAtAction(nameof(GetById), new { AnimalId = response.Id }, response);
     }
 
-    /*[HttpPut("{animalId}"), Authorize]
+    [HttpPut("{animalId}"), Authorize]
     public async Task<UpdateAnimalResponse> Update([FromRoute] long animalId, [FromBody] UpdateAnimalCommand command) =>
         await Mediator.Send(command with { Id = animalId });
     
-    [HttpDelete("{animalId}"), Authorize]
+    /*[HttpDelete("{animalId}"), Authorize]
     public async Task Delete([FromRoute] long animalId) =>
         await Mediator.Send(new DeleteAnimalCommand(animalId));*/
 }

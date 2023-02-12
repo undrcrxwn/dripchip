@@ -1,6 +1,7 @@
 using System.Reflection;
 using DripChip.Application.Behaviors;
 using FluentValidation;
+using Mapster;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,9 @@ public static class ConfigureServices
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
+        var typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
+        typeAdapterConfig.Scan(assembly);
+
         return services
             .AddMediatR(assembly)
             .AddValidatorsFromAssembly(assembly)

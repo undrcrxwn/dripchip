@@ -21,7 +21,6 @@
       <Folder Include="Features\Animals\Commands\Delete" />
       <Folder Include="Features\Animals\Commands\RemoveType" />
       <Folder Include="Features\Animals\Commands\ReplaceType" />
-      <Folder Include="Features\Animals\Commands\Update" />
     </ItemGroup>
 
     <ItemGroup>

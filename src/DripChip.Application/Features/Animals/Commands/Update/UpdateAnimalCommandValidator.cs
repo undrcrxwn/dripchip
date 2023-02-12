@@ -2,18 +2,15 @@ using DripChip.Application.Extensions;
 using DripChip.Domain.Enumerations;
 using FluentValidation;
 
-namespace DripChip.Application.Features.Animals.Commands.Create;
+namespace DripChip.Application.Features.Animals.Commands.Update;
 
-public class CreateAnimalCommandValidator : AbstractValidator<CreateAnimalCommand>
+public class UpdateAnimalCommandValidator : AbstractValidator<UpdateAnimalCommand>
 {
-    public CreateAnimalCommandValidator()
+    public UpdateAnimalCommandValidator()
     {
-        RuleFor(x => x.AnimalTypes)
-            .NotEmpty();
-
-        RuleForEach(x => x.AnimalTypes)
-            .GreaterThan(0);
-
+        RuleFor(x => x.Id)
+            .AnimalId();
+        
         RuleFor(x => x.Weight)
             .GreaterThan(0);
 
@@ -25,9 +22,6 @@ public class CreateAnimalCommandValidator : AbstractValidator<CreateAnimalComman
 
         RuleFor(x => x.Gender)
             .IsInEnum(typeof(AnimalGender));
-        
-        RuleFor(x => x.LifeStatus)
-            .IsInEnum(typeof(AnimalLifeStatus));
 
         RuleFor(x => x.ChipperId)
             .AccountId();

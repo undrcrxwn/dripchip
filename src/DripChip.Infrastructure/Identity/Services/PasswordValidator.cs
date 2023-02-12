@@ -24,6 +24,6 @@ public class PasswordValidator<T> : Application.Abstractions.Identity.IPasswordV
             .ToArray();
 
         if (validationErrors.Any())
-            throw new ValidationException(validationErrors.ToValidationFailures(context.DisplayName));
+            throw new ValidationException(validationErrors.ToValidationFailures(context.PropertyName));
     }
 }

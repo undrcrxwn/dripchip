@@ -30,7 +30,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         // User creation
         var errorDescriptions = await _users.CreateAsync(request.Email, request.Password);
         if (errorDescriptions is not null)
-            throw new ValidationException(errorDescriptions.ToArray(), nameof(request.Password));
+            throw new ValidationException(nameof(request.Password), errorDescriptions);
         
         var user =
             await _users.FindByEmailAsync(request.Email)

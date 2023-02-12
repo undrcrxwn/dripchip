@@ -13,24 +13,12 @@ public static class ValidationExtensions
 
     public static IRuleBuilder<T, string> IsInEnum<T>(
         this IRuleBuilder<T, string> ruleBuilder, Type enumType, bool ignoreCase = true) =>
-        ruleBuilder.Must(x =>
-            Enum.TryParse(enumType, x, ignoreCase, out _));
-
-    public static IRuleBuilder<T, int> AccountId<T>(
-        this IRuleBuilder<T, int> ruleBuilder) =>
-        ruleBuilder.GreaterThan(0);
-
-    public static IRuleBuilder<T, long> LocationPointId<T>(
-        this IRuleBuilder<T, long> ruleBuilder) =>
-        ruleBuilder.GreaterThan(0);
-
-    public static IRuleBuilder<T, long> AnimalTypeId<T>(
-        this IRuleBuilder<T, long> ruleBuilder) =>
-        ruleBuilder.GreaterThan(0);
-    
-    public static IRuleBuilder<T, long> AnimalId<T>(
-        this IRuleBuilder<T, long> ruleBuilder) =>
-        ruleBuilder.GreaterThan(0);
+        ruleBuilder.Custom((property, context) =>
+        {
+            if (!Enum.TryParse(enumType, property, ignoreCase, out _))
+                context.AddFailure(context.PropertyName,
+                    $"'{property}' is not a valid value for '{enumType.Name}'.");
+        });
 
     public static IRuleBuilder<T, double> Latitude<T>(
         this IRuleBuilder<T, double> ruleBuilder) =>
@@ -43,4 +31,20 @@ public static class ValidationExtensions
         ruleBuilder
             .GreaterThanOrEqualTo(-180)
             .LessThanOrEqualTo(180);
+
+    public static IRuleBuilder<T, long> LocationPointId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, int> AccountId<T>(
+        this IRuleBuilder<T, int> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, long> AnimalId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, long> AnimalTypeId<T>(
+        this IRuleBuilder<T, long> ruleBuilder) =>
+        ruleBuilder.GreaterThan(0);
 }
