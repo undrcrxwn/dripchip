@@ -39,7 +39,7 @@ public class CreateAnimalCommandHandler : IRequestHandler<CreateAnimalCommand, C
         entity.Chipper = chipper;
         entity.ChippingLocation = chippingLocationPoint;
 
-        await _context.Animals.AddAsync(entity);
+        await _context.Animals.AddAsync(entity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Adapt<CreateAnimalResponse>();
