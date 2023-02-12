@@ -25,9 +25,6 @@ public class CreateAnimalCommandValidator : AbstractValidator<CreateAnimalComman
 
         RuleFor(x => x.Gender)
             .IsInEnum(typeof(AnimalGender));
-        
-        RuleFor(x => x.LifeStatus)
-            .IsInEnum(typeof(AnimalLifeStatus));
 
         RuleFor(x => x.ChipperId)
             .AccountId();

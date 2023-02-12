@@ -25,7 +25,7 @@ public class UpdateAnimalCommandHandler : IRequestHandler<UpdateAnimalCommand, U
         if (animal.LifeStatus == AnimalLifeStatus.Dead && modifiedAnimal.LifeStatus != AnimalLifeStatus.Dead)
             throw new ValidationException(nameof(request.LifeStatus), "The life status of a dead animal cannot be changed.");
 
-        if (animal.LocationPoints.FirstOrDefault()?.Id == request.ChippingLocationId)
+        if (animal.VisitedLocations.FirstOrDefault()?.Id == request.ChippingLocationId)
             throw new ValidationException(nameof(request.ChippingLocationId),
                 "The specified chipping location point matches the animal's first visited location.");
 

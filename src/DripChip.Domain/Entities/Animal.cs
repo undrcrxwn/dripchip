@@ -12,14 +12,14 @@ public class Animal : EntityBase<long>
     public float Height { get; set; }
 
     public AnimalGender Gender { get; set; }
-    public AnimalLifeStatus LifeStatus { get; set; }
+    public AnimalLifeStatus LifeStatus { get; set; } = AnimalLifeStatus.Alive;
 
     public DateTime ChippingDateTime { get; set; }
     public Account Chipper { get; set; }
     public LocationPoint ChippingLocation { get; set; }
     
     // ReSharper disable once CollectionNeverUpdated.Global
-    public IList<LocationPoint> LocationPoints { get; set; } = new List<LocationPoint>();
+    public IList<LocationPoint> VisitedLocations { get; set; } = new List<LocationPoint>();
 
     public DateTime? DeathDateTime { get; set; }
 }
