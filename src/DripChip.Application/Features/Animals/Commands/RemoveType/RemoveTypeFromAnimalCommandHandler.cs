@@ -21,9 +21,13 @@ public class RemoveTypeFromAnimalCommandHandler : IRequestHandler<RemoveTypeFrom
         var animalType =
             await _context.AnimalTypes.FindAsync(request.AnimalTypeId)
             ?? throw new NotFoundException();
-
+        
         if (!animal.AnimalTypes.Contains(animalType))
             throw new NotFoundException();
+
+        if (animal.AnimalTypes.Count == 1)
+            throw new ValidationException(nameof(request.AnimalTypeId),
+                "The specified animal type is the only type attached to the animal.");
         
         animal.AnimalTypes.Remove(animalType);
 

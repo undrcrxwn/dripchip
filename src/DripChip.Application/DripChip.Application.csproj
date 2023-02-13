@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Animals\Commands\Delete" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\DripChip.Domain\DripChip.Domain.csproj" />
     </ItemGroup>
 

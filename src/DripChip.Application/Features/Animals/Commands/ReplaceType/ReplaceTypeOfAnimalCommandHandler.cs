@@ -22,6 +22,9 @@ public class ReplaceTypeOfAnimalCommandHandler : IRequestHandler<ReplaceTypeOfAn
             await _context.AnimalTypes.FindAsync(request.NewTypeId)
             ?? throw new NotFoundException();
 
+        if (animal.AnimalTypes.Contains(newAnimalType))
+            throw new AlreadyExistsException();
+
         var oldAnimalType = animal.AnimalTypes.SingleOrDefault(animalType => animalType.Id == request.OldTypeId);
         if (oldAnimalType is null)
             throw new NotFoundException();
