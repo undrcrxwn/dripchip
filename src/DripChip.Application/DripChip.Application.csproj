@@ -17,10 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Animals\Commands\AddType" />
       <Folder Include="Features\Animals\Commands\Delete" />
-      <Folder Include="Features\Animals\Commands\RemoveType" />
-      <Folder Include="Features\Animals\Commands\ReplaceType" />
     </ItemGroup>
 
     <ItemGroup>

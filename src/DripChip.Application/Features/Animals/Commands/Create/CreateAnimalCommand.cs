@@ -8,6 +8,5 @@ public record CreateAnimalCommand(
     float Length,
     float Height,
     string Gender,
-    DateTime ChippingDateTime,
     int ChipperId,
     long ChippingLocationId) : IRequest<CreateAnimalResponse>;
