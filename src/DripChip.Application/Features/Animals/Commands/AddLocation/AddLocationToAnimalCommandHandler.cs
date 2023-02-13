@@ -38,6 +38,6 @@ public class AddLocationToAnimalCommandHandler : IRequestHandler<AddLocationToAn
         animal.VisitedLocations.Add(locationPoint);
 
         await _context.SaveChangesAsync(cancellationToken);
-        return animal.Adapt<AddLocationToAnimalResponse>() with { DateTimeOfVisitLocationPoint = DateTime.UtcNow };
+        return animal.Adapt<AddLocationToAnimalResponse>() with { DateTimeOfVisitLocationPoint = DateTimeOffset.Now };
     }
 }

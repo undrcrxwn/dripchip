@@ -8,8 +8,8 @@ public record SearchAnimalLocationsResponse(
     float Height,
     string Gender,
     string LifeStatus,
-    DateTime ChippingDateTime,
+    DateTimeOffset ChippingDateTime,
     int ChipperId,
     long ChippingLocationId,
     IEnumerable<long> VisitedLocations,
-    DateTime? DeathDateTime);
+    DateTimeOffset? DeathDateTime);

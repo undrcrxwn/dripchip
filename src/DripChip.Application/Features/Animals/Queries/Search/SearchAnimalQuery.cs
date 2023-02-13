@@ -4,8 +4,8 @@ namespace DripChip.Application.Features.Animals.Queries.Search;
 
 public record SearchAnimalQuery(
     
-    DateTime? StartDateTime = default,
-    DateTime? EndDateTime = default,
+    DateTimeOffset? StartDateTime = default,
+    DateTimeOffset? EndDateTime = default,
     
     int? ChipperId = default,
     long? ChippingLocationId = default,

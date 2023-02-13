@@ -6,8 +6,8 @@ public record SearchAnimalLocationsQuery(
     
     long Id,
     
-    DateTime? StartDateTime = default,
-    DateTime? EndDateTime = default,
+    DateTimeOffset? StartDateTime = default,
+    DateTimeOffset? EndDateTime = default,
     
     int From = 0,
     int Size = 10

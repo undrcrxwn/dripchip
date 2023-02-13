@@ -54,13 +54,13 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                     b.Property<int>("ChipperId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ChippingDateTime")
+                    b.Property<DateTimeOffset>("ChippingDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("ChippingLocationId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("DeathDateTime")
+                    b.Property<DateTimeOffset?>("DeathDateTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Gender")
@@ -361,7 +361,7 @@ namespace DripChip.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("DripChip.Domain.Entities.LocationPoint", b =>
                 {
                     b.HasOne("DripChip.Domain.Entities.Animal", null)
-                        .WithMany("LocationPoints")
+                        .WithMany("VisitedLocations")
                         .HasForeignKey("AnimalId");
                 });
 
@@ -420,7 +420,7 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                 {
                     b.Navigation("AnimalTypes");
 
-                    b.Navigation("LocationPoints");
+                    b.Navigation("VisitedLocations");
                 });
 #pragma warning restore 612, 618
         }
