@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Infrastructure.Persistence;
 
-public class ApplicationDbContext :
+public sealed class ApplicationDbContext :
     IdentityDbContext<User, IdentityRole<int>, int>,
     IApplicationDbContext
 {
@@ -17,5 +17,26 @@ public class ApplicationDbContext :
     public DbSet<Animal> Animals => Set<Animal>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
+        : base(options) => ChangeTracker.LazyLoadingEnabled = false;
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<Animal>()
+            .HasMany(x => x.AnimalTypes)
+            .WithMany(x => x.Animals);
+        
+        builder.Entity<Animal>()
+            .HasOne(x => x.Chipper)
+            .WithMany(x => x.ChippedAnimals);
+        
+        builder.Entity<Animal>()
+            .HasOne(x => x.ChippingLocation)
+            .WithMany(x => x.ChippedAnimals);
+        
+        builder.Entity<Animal>()
+            .HasMany(x => x.VisitedLocations)
+            .WithMany(x => x.Visitors);
+        
+        base.OnModelCreating(builder);
+    }
 }

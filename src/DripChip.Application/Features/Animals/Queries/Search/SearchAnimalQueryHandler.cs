@@ -15,6 +15,8 @@ public class SearchAnimalQueryHandler : IRequestHandler<SearchAnimalQuery, IEnum
     public async Task<IEnumerable<SearchAnimalResponse>> Handle(SearchAnimalQuery request, CancellationToken cancellationToken)
     {
         var animals = _context.Animals
+            .Include(animal => animal.AnimalTypes)
+            .Include(animal => animal.VisitedLocations)
             // Filtering
             .Where(x =>
                 request.StartDateTime == null ||

@@ -40,7 +40,7 @@ public class CreateAnimalCommandHandler : IRequestHandler<CreateAnimalCommand, C
         entity.Chipper = chipper;
         entity.ChippingLocation = chippingLocationPoint;
         entity.ChippingDateTime = DateTimeOffset.Now.Trim(TimeSpan.TicksPerMillisecond);
-
+        
         await _context.Animals.AddAsync(entity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
