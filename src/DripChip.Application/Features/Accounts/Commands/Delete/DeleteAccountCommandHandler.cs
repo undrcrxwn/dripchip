@@ -3,6 +3,7 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Application.Features.Accounts.Commands.Delete;
 
@@ -25,9 +26,14 @@ public class DeleteAccountCommandHandler : IRequestHandler<DeleteAccountCommand>
             throw new ForbiddenException();
 
         var account =
-            await _context.Accounts.FindAsync(request.Id)
+            await _context.Accounts
+                .Include(account => account.ChippedAnimals)
+                .FirstOrDefaultAsync(account => account.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException();
 
+        if (account.ChippedAnimals.Any())
+            throw new ValidationException(nameof(request.Id), "The specified account owns one or more chipped animals.");
+        
         _context.Accounts.Remove(account);
         await _users.DeleteAsync(request.Id);
 
