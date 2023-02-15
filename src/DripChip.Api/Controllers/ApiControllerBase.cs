@@ -1,5 +1,5 @@
 using DripChip.Api.Attributes;
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;

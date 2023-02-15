@@ -11,7 +11,9 @@ namespace DripChip.Api.Extensions;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    private const string SwaggerIgnoredNamespaceIdentifiersKey = "Swagger:IgnoredNamespaceIdentifiers";
+    
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>()
@@ -28,6 +30,20 @@ public static class ConfigureServices
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "DripChip API", Version = "v1" });
+
+            options.CustomSchemaIds(type =>
+            {
+                var ignoredIdentifiers = configuration
+                    .GetSection(SwaggerIgnoredNamespaceIdentifiersKey)
+                    .Get<string[]>()!;
+                
+                var lastNames = type.FullName!.Split('.')
+                    .Except(ignoredIdentifiers)
+                    .TakeLast(2)
+                    .Select(name => name.Replace("+", string.Empty));
+                
+                return string.Join(string.Empty, lastNames);
+            });
 
             options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
             {

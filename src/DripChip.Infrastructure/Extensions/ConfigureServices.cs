@@ -1,4 +1,3 @@
-using System.Reflection;
 using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Filtering;
 using DripChip.Application.Abstractions.Identity;
@@ -7,7 +6,6 @@ using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,9 +17,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var assembly = Assembly.GetExecutingAssembly();
         services
-            .AddMediatR(assembly)
             .AddHostedService<DatabaseInitializer>()
             .AddSingleton<IFilterFactory, FilterFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()

@@ -1,8 +1,6 @@
 using DripChip.Api.Attributes;
-using DripChip.Application.Features.AnimalTypes.Commands.Create;
-using DripChip.Application.Features.AnimalTypes.Commands.Delete;
-using DripChip.Application.Features.AnimalTypes.Commands.Update;
-using DripChip.Application.Features.AnimalTypes.Queries.GetById;
+using DripChip.Application.Features.Animals.Commands;
+using DripChip.Application.Features.AnimalTypes.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,21 +10,21 @@ namespace DripChip.Api.Controllers;
 public class AnimalTypesController : ApiControllerBase
 {
     [HttpGet("{typeId}")]
-    public async Task<GetAnimalTypeByIdResponse> GetById([FromRoute] long typeId) =>
-        await Mediator.Send(new GetAnimalTypeByIdQuery(typeId));
+    public async Task<GetById.Response> GetById([FromRoute] long typeId) =>
+        await Mediator.Send(new GetById.Query(typeId));
 
     [HttpPost, Authorize]
-    public async Task<IActionResult> Create([FromBody] CreateAnimalTypeCommand command)
+    public async Task<IActionResult> Create([FromBody] Create.Command command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { TypeId = response.Id }, response);
     }
 
     [HttpPut("{typeId}"), Authorize]
-    public async Task<UpdateAnimalTypeResponse> Update([FromRoute] long typeId, [FromBody] UpdateAnimalTypeCommand command) =>
+    public async Task<Update.Response> Update([FromRoute] long typeId, [FromBody] Update.Command command) =>
         await Mediator.Send(command with { Id = typeId });
     
     [HttpDelete("{typeId}"), Authorize]
     public async Task Delete([FromRoute] long typeId) =>
-        await Mediator.Send(new DeleteAnimalTypeCommand(typeId));
+        await Mediator.Send(new Delete.Command(typeId));
 }

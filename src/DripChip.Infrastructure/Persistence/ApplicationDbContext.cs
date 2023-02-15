@@ -15,6 +15,7 @@ public sealed class ApplicationDbContext :
     public DbSet<LocationPoint> LocationPoints => Set<LocationPoint>();
     public DbSet<AnimalType> AnimalTypes => Set<AnimalType>();
     public DbSet<Animal> Animals => Set<Animal>();
+    public DbSet<Visit> AnimalLocationVisits => Set<Visit>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) => ChangeTracker.LazyLoadingEnabled = false;
@@ -34,8 +35,8 @@ public sealed class ApplicationDbContext :
             .WithMany(x => x.ChippedAnimals);
         
         builder.Entity<Animal>()
-            .HasMany(x => x.VisitedLocations)
-            .WithMany(x => x.Visitors);
+            .HasMany(x => x.Visits)
+            .WithOne(x => x.Visitor);
         
         base.OnModelCreating(builder);
     }

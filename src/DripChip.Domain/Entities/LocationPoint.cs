@@ -6,5 +6,5 @@ public class LocationPoint : EntityBase<long>
     public double Longitude { get; set; }
 
     public IList<Animal> ChippedAnimals { get; set; } = new List<Animal>();
-    public IList<Animal> Visitors { get; set; } = new List<Animal>();
+    public IList<Visit> AnimalVisits { get; set; } = new List<Visit>();
 }

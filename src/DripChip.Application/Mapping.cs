@@ -14,6 +14,9 @@ public class Mapping : IRegister
         config.NewConfig<LocationPoint, long>()
             .MapWith(point => point.Id);
         
+        config.NewConfig<Visit, long>()
+            .MapWith(visit => visit.Id);
+        
         // Enumeration to name
         config.NewConfig<Enum, string>()
             .MapWith(enumeration => enumeration.ToString().ToUpper());

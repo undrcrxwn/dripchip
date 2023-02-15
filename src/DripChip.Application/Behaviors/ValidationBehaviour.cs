@@ -1,5 +1,5 @@
 using FluentValidation;
-using MediatR;
+using Mediator;
 
 namespace DripChip.Application.Behaviors;
 
@@ -11,11 +11,11 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators) =>
         _validators = validators;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async ValueTask<TResponse> Handle(TRequest message, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
         if (_validators.Any())
         {
-            var context = new ValidationContext<TRequest>(request);
+            var context = new ValidationContext<TRequest>(message);
 
             var validationResults = await Task.WhenAll(
                 _validators.Select(validator =>
@@ -29,6 +29,6 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                 throw new Application.Exceptions.ValidationException(failures);
         }
         
-        return await next();
+        return await next(message, cancellationToken);
     }
 }
