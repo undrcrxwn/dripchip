@@ -34,16 +34,15 @@ public static class SearchVisits
 
         public async ValueTask<IEnumerable<Response>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var animals = _context.Animals
-                .Include(animal => animal.AnimalTypes)
-                .Include(animal => animal.Visits)
+            var animals = _context.AnimalLocationVisits
                 // Filtering
+                .Where(x => x.VisitorId == request.Id)
                 .Where(x =>
                     request.StartDateTime == null ||
-                    x.ChippingDateTime > request.StartDateTime)
+                    x.DateTimeOfVisitLocationPoint >= request.StartDateTime)
                 .Where(x =>
                     request.EndDateTime == null ||
-                    x.ChippingDateTime < request.EndDateTime)
+                    x.DateTimeOfVisitLocationPoint <= request.EndDateTime)
                 // Pagination
                 .OrderBy(x => x.Id)
                 .Skip(request.From)
