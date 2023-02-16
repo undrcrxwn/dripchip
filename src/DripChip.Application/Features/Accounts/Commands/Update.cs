@@ -17,7 +17,7 @@ public static class Update
         string Email,
         string Password) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator(IPasswordValidator<Command> passwordValidator)
         {

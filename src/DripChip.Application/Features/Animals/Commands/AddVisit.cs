@@ -15,7 +15,7 @@ public static class AddVisit
 {
     public sealed record Command(long AnimalId, long LocationPointId) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

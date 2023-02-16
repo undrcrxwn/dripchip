@@ -13,7 +13,7 @@ public static class Create
 {
     public sealed record Command(double Latitude, double Longitude) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

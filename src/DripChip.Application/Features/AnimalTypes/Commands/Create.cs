@@ -12,7 +12,7 @@ public static class Create
 {
     public sealed record Command(string Type) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator() => RuleFor(x => x.Type).NotEmpty();
     }

@@ -12,7 +12,7 @@ public static class RemoveType
 {
     public sealed record Command(long AnimalId, long AnimalTypeId) : IRequest<Response>;
     
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

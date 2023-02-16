@@ -12,7 +12,7 @@ public static class RemoveVisit
 {
     public sealed record Command(long AnimalId, long VisitId) : IRequest<Response>;
     
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

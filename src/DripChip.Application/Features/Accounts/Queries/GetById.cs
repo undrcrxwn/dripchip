@@ -11,7 +11,7 @@ public static class GetById
 {
     public sealed record Query(int Id) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Query>
+    public sealed class Validator : AbstractValidator<Query>
     {
         public Validator() => RuleFor(x => x.Id).AccountId();
     }

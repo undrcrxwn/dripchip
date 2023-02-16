@@ -13,7 +13,7 @@ public static class Update
 {
     public sealed record Command(long Id, string Type) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

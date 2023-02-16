@@ -1,5 +1,5 @@
 using DripChip.Api.Attributes;
-using DripChip.Application.Features.Animals.Commands;
+using DripChip.Application.Features.AnimalTypes.Commands;
 using DripChip.Application.Features.AnimalTypes.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

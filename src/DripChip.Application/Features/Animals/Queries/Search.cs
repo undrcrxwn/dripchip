@@ -20,7 +20,7 @@ public static class Search
         int From = 0,
         int Size = 10) : IRequest<IEnumerable<Response>>;
 
-    private sealed class Validator : AbstractValidator<Query>
+    public sealed class Validator : AbstractValidator<Query>
     {
         public Validator()
         {

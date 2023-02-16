@@ -23,7 +23,7 @@ public static class Update
         int ChipperId,
         long ChippingLocationId) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

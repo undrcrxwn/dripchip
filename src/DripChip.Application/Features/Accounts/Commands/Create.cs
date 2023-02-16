@@ -19,7 +19,7 @@ public static class Create
         string FirstName,
         string LastName) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator(IPasswordValidator<Command> passwordValidator)
         {

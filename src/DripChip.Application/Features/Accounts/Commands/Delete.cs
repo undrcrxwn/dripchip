@@ -14,7 +14,7 @@ public static class Delete
 {
     public sealed record Command(int Id) : IRequest;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator() => RuleFor(x => x.Id).AccountId();
     }

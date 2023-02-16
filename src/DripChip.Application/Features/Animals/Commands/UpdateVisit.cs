@@ -16,7 +16,7 @@ public static class UpdateVisit
         long VisitedLocationPointId,
         long LocationPointId) : IRequest<Response>;
 
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

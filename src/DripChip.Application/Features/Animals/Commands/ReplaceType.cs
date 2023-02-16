@@ -11,7 +11,7 @@ public static class ReplaceType
 {
     public sealed record Command(long Id, long OldTypeId, long NewTypeId) : IRequest<Response>;
     
-    private sealed class Validator : AbstractValidator<Command>
+    public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {

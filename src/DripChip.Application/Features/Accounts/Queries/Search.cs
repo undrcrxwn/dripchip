@@ -18,7 +18,7 @@ public static class Search
         int From = 0,
         int Size = 10) : IRequest<IEnumerable<Response>>;
 
-    private sealed class Validator : AbstractValidator<Query>
+    public sealed class Validator : AbstractValidator<Query>
     {
         public Validator()
         {
@@ -33,7 +33,12 @@ public static class Search
         private readonly IUserService _users;
         private readonly IFilterFactory _filterFactory;
 
-        public Handler(IApplicationDbContext context) => _context = context;
+        public Handler(IApplicationDbContext context, IUserService users, IFilterFactory filterFactory)
+        {
+            _context = context;
+            _users = users;
+            _filterFactory = filterFactory;
+        }
 
         public async ValueTask<IEnumerable<Response>> Handle(Query request, CancellationToken cancellationToken)
         {
