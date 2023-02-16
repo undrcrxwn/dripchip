@@ -71,6 +71,7 @@ public static class Update
     
     public sealed record Response(
         long Id,
+        IEnumerable<long> AnimalTypes,
         float Weight,
         float Length,
         float Height,

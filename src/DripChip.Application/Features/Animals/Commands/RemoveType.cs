@@ -4,6 +4,7 @@ using DripChip.Application.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Animals.Commands;
@@ -30,7 +31,9 @@ public static class RemoveType
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var animal =
-                await _context.Animals.FindAsync(request.AnimalId)
+                await _context.Animals
+                    .Include(animal => animal.AnimalTypes)
+                    .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
                 ?? throw new NotFoundException();
 
             var animalType =
