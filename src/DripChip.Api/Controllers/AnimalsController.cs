@@ -69,7 +69,7 @@ public class AnimalsController : ApiControllerBase
         await Mediator.Send(command with { Id = animalId });
 
     [HttpDelete("{animalId}/locations/{visitId}")]
-    public async Task<RemoveVisit.Response> RemoveVisit([FromRoute] long animalId, [FromRoute] long visitId) =>
+    public async Task RemoveVisit([FromRoute] long animalId, [FromRoute] long visitId) =>
         await Mediator.Send(new RemoveVisit.Command(animalId, visitId));
 
     #endregion

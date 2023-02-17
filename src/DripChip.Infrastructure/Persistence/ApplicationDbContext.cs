@@ -35,7 +35,7 @@ public sealed class ApplicationDbContext :
             .WithMany(x => x.ChippedAnimals);
         
         builder.Entity<Animal>()
-            .HasMany(x => x.Visits)
+            .HasMany(x => x.VisitedLocations)
             .WithOne(x => x.Visitor);
         
         base.OnModelCreating(builder);

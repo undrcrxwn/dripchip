@@ -27,11 +27,11 @@ public static class Delete
         {
             var animal =
                 await _context.Animals
-                    .Include(animal => animal.Visits)
+                    .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException();
 
-            if (animal.Visits.Any())
+            if (animal.VisitedLocations.Any())
                 throw new ValidationException(nameof(request.Id), "The specified animal has moved away from its chipping location.");
 
             _context.Animals.Remove(animal);

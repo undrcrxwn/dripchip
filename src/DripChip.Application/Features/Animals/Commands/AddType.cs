@@ -1,9 +1,11 @@
+using System.Net.WebSockets;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Application.Features.Animals.Commands;
 
@@ -29,7 +31,10 @@ public static class AddType
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var animal =
-                await _context.Animals.FindAsync(request.AnimalId)
+                await _context.Animals
+                    .Include(animal => animal.AnimalTypes)
+                    .Include(animal => animal.VisitedLocations)
+                    .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
                 ?? throw new NotFoundException();
 
             var animalType =

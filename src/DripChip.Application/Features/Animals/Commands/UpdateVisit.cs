@@ -36,23 +36,27 @@ public static class UpdateVisit
         {
             var animal =
                 await _context.Animals
-                    .Include(animal => animal.Visits)
+                    .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
+                ?? throw new NotFoundException();
+
+            var visit =
+                animal.VisitedLocations.FirstOrDefault(visit => visit.Id == request.VisitedLocationPointId)
                 ?? throw new NotFoundException();
 
             var newLocationPoint =
                 await _context.LocationPoints.FindAsync(request.LocationPointId)
                 ?? throw new NotFoundException();
 
-            var visit = animal.Visits.FirstOrDefault(visit => visit.Id == request.VisitedLocationPointId);
-            if (visit is null)
-                throw new NotFoundException();
-
-            var visitIndex = animal.Visits.IndexOf(visit);
-
-            var previousLocationPointId = animal.Visits.ElementAtOrDefault(visitIndex - 1)?.LocationPointId;
-            var nextLocationPointId = animal.Visits.ElementAtOrDefault(visitIndex + 1)?.LocationPointId;
+            var sortedVisits = animal.VisitedLocations
+                .OrderBy(visit => visit.DateTimeOfVisitLocationPoint)
+                .ToList();
             
+            var visitIndex = sortedVisits.IndexOf(visit);
+
+            var previousLocationPointId = sortedVisits.ElementAtOrDefault(visitIndex - 1)?.LocationPointId;
+            var nextLocationPointId = sortedVisits.ElementAtOrDefault(visitIndex + 1)?.LocationPointId;
+
             if (previousLocationPointId == request.LocationPointId ||
                 nextLocationPointId == request.LocationPointId)
                 throw new ValidationException(nameof(request.LocationPointId),
@@ -62,28 +66,19 @@ public static class UpdateVisit
                 throw new ValidationException(nameof(request.VisitedLocationPointId),
                     "The specified location point matches the original location point.");
 
-            if (animal.Visits.First() == visit && visit.LocationPointId == animal.ChippingLocationId)
+            if (visitIndex == 0 && request.LocationPointId == animal.ChippingLocationId)
                 throw new ValidationException(nameof(request.VisitedLocationPointId),
                     "The specified location point matches the animal's chipping location.");
 
             visit.LocationPoint = newLocationPoint;
 
             await _context.SaveChangesAsync(cancellationToken);
-            return animal.Adapt<Response>();
+            return visit.Adapt<Response>();
         }
     }
 
     public sealed record Response(
         long Id,
-        IEnumerable<long> AnimalTypes,
-        float Weight,
-        float Length,
-        float Height,
-        string Gender,
-        string LifeStatus,
-        DateTimeOffset ChippingDateTime,
-        int ChipperId,
-        long ChippingLocationId,
-        IEnumerable<long> VisitedLocations,
-        DateTimeOffset? DeathDateTime);
+        DateTimeOffset DateTimeOfVisitLocationPoint,
+        long LocationPointId);
 }

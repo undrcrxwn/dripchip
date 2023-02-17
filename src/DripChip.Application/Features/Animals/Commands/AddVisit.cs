@@ -34,7 +34,7 @@ public static class AddVisit
         {
             var animal =
                 await _context.Animals
-                    .Include(animal => animal.Visits)
+                    .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
                 ?? throw new NotFoundException();
 
@@ -42,7 +42,7 @@ public static class AddVisit
                 await _context.LocationPoints.FindAsync(request.LocationPointId)
                 ?? throw new NotFoundException();
 
-            if (!animal.Visits.Any() && animal.ChippingLocation == locationPoint)
+            if (!animal.VisitedLocations.Any() && animal.ChippingLocation == locationPoint)
                 throw new ValidationException(nameof(request.LocationPointId),
                     "The specified location point matches the animal's chipping location point.");
 
@@ -50,7 +50,7 @@ public static class AddVisit
                 throw new ValidationException(nameof(request.LocationPointId),
                     "The animal's location cannot be changed, since the animal is dead.");
 
-            if (animal.Visits.Any() && animal.Visits.Last().LocationPointId == locationPoint.Id)
+            if (animal.VisitedLocations.Any() && animal.VisitedLocations.Last().LocationPointId == locationPoint.Id)
                 throw new ValidationException(nameof(request.LocationPointId),
                     "The specified location point matches the animal's current location point.");
 
@@ -58,13 +58,13 @@ public static class AddVisit
             {
                 Visitor = animal,
                 LocationPoint = locationPoint,
-                DateTimeOfVisitLocationPoint = DateTimeOffset.UtcNow
+                DateTimeOfVisitLocationPoint = DateTimeOffset.UtcNow.Trim(TimeSpan.TicksPerMillisecond)
             };
 
-            animal.Visits.Add(visit);
+            animal.VisitedLocations.Add(visit);
 
             await _context.SaveChangesAsync(cancellationToken);
-            return animal.Adapt<Response>() with { DateTimeOfVisitLocationPoint = DateTimeOffset.UtcNow };
+            return visit.Adapt<Response>();
         }
     }
     

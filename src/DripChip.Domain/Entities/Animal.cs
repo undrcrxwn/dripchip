@@ -22,7 +22,7 @@ public class Animal : EntityBase<long>
     public long ChippingLocationId { get; set; }
     public LocationPoint ChippingLocation { get; set; }
     
-    public IList<Visit> Visits { get; set; } = new List<Visit>();
+    public IList<Visit> VisitedLocations { get; set; } = new List<Visit>();
 
     public DateTimeOffset? DeathDateTime { get; set; }
 }

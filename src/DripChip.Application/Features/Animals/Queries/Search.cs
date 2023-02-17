@@ -59,7 +59,7 @@ public static class Search
 
             var animals = _context.Animals
                 .Include(animal => animal.AnimalTypes)
-                .Include(animal => animal.Visits)
+                .Include(animal => animal.VisitedLocations)
                 // Filtering
                 .Where(x =>
                     request.StartDateTime == null ||

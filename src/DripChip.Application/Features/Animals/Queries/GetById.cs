@@ -27,7 +27,7 @@ public static class GetById
         {
             var entity = await _context.Animals
                 .Include(animal => animal.AnimalTypes)
-                .Include(animal => animal.Visits)
+                .Include(animal => animal.VisitedLocations)
                 .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken);
 
             if (entity is null)

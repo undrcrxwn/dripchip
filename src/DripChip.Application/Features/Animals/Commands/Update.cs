@@ -48,24 +48,40 @@ public static class Update
         {
             var animal =
                 await _context.Animals
-                    .AsNoTracking()
+                    .Include(animal => animal.AnimalTypes)
+                    .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException();
 
+            var chipperNotFound = await _context.Accounts
+                .AllAsync(account => account.Id != request.ChipperId, cancellationToken);
+            
+            var chippingLocationNotFound = await _context.LocationPoints
+                .AllAsync(location => location.Id != request.ChippingLocationId, cancellationToken);
+            
+            if (chipperNotFound || chippingLocationNotFound)
+                throw new NotFoundException();
+
             var modifiedAnimal = request.Adapt<Animal>();
+            modifiedAnimal.AnimalTypes = animal.AnimalTypes;
+            modifiedAnimal.VisitedLocations = animal.VisitedLocations;
+
+            if (animal.LifeStatus != modifiedAnimal.LifeStatus && modifiedAnimal.LifeStatus == AnimalLifeStatus.Dead)
+                modifiedAnimal.DeathDateTime = DateTimeOffset.UtcNow;
 
             if (animal.LifeStatus == AnimalLifeStatus.Dead && modifiedAnimal.LifeStatus != AnimalLifeStatus.Dead)
                 throw new ValidationException(nameof(request.LifeStatus), "The life status of a dead animal cannot be changed.");
 
-            if (animal.Visits.FirstOrDefault()?.LocationPointId == request.ChippingLocationId)
+            if (animal.VisitedLocations.FirstOrDefault()?.LocationPointId == request.ChippingLocationId)
                 throw new ValidationException(nameof(request.ChippingLocationId),
                     "The specified chipping location point matches the animal's first visited location.");
 
+            _context.Animals.Entry(animal).State = EntityState.Detached;
             _context.Animals.Attach(modifiedAnimal);
             _context.Animals.Update(modifiedAnimal);
 
             await _context.SaveChangesAsync(cancellationToken);
-            return animal.Adapt<Response>();
+            return modifiedAnimal.Adapt<Response>();
         }
     }
     
@@ -77,6 +93,9 @@ public static class Update
         float Height,
         string Gender,
         string LifeStatus,
+        DateTimeOffset ChippingDateTime,
         int ChipperId,
-        long ChippingLocationId);
+        long ChippingLocationId,
+        IEnumerable<long> VisitedLocations,
+        DateTimeOffset? DeathDateTime);
 }

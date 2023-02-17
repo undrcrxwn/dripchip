@@ -4,6 +4,7 @@ using DripChip.Application.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Application.Features.Animals.Commands;
 
@@ -30,7 +31,9 @@ public static class ReplaceType
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var animal =
-                await _context.Animals.FindAsync(request.Id)
+                await _context.Animals
+                    .Include(animal => animal.AnimalTypes)
+                    .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException();
 
             var newAnimalType =
