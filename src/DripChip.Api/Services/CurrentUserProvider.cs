@@ -21,4 +21,6 @@ public class CurrentUserProvider : ICurrentUserProvider
             return success ? accountId : null;
         }
     }
+
+    public bool IsAuthenticated => AccountId is not null;
 }

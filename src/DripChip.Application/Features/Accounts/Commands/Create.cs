@@ -1,3 +1,4 @@
+using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
@@ -34,15 +35,20 @@ public static class Create
     {
         private readonly IApplicationDbContext _context;
         private readonly IUserService _users;
+        private readonly ICurrentUserProvider _issuer;
 
-        public Handler(IApplicationDbContext context, IUserService users)
+        public Handler(IApplicationDbContext context, IUserService users, ICurrentUserProvider issuer)
         {
             _context = context;
             _users = users;
+            _issuer = issuer;
         }
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (_issuer.IsAuthenticated)
+                throw new ForbiddenException();
+            
             var sameExists = await _users.Users.AnyAsync(user =>
                 user.Email == request.Email, cancellationToken);
 
