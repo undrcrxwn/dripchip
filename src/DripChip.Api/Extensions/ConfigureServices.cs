@@ -12,7 +12,7 @@ namespace DripChip.Api.Extensions;
 public static class ConfigureServices
 {
     private const string SwaggerIgnoredNamespaceIdentifiersKey = "Swagger:IgnoredNamespaceIdentifiers";
-    
+
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
@@ -25,6 +25,7 @@ public static class ConfigureServices
             var transformer = new KebabCaseParameterPolicy();
             options.Conventions.Add(new RouteTokenTransformerConvention(transformer));
             options.Filters.Add<ApiExceptionFilterAttribute>();
+            options.Filters.Add<ApiAuthorizationFilter>();
         });
 
         services.AddSwaggerGen(options =>
@@ -36,12 +37,12 @@ public static class ConfigureServices
                 var ignoredIdentifiers = configuration
                     .GetSection(SwaggerIgnoredNamespaceIdentifiersKey)
                     .Get<string[]>()!;
-                
+
                 var lastNames = type.FullName!.Split('.')
                     .Except(ignoredIdentifiers)
                     .TakeLast(2)
                     .Select(name => name.Replace("+", string.Empty));
-                
+
                 return string.Join(string.Empty, lastNames);
             });
 
@@ -71,7 +72,13 @@ public static class ConfigureServices
         });
 
         services
-            .AddAuthentication("BasicAuthentication")
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = "BasicAuthentication";
+                options.DefaultAuthenticateScheme = "BasicAuthentication";
+                options.DefaultChallengeScheme = "BasicAuthentication";
+                options.DefaultForbidScheme = "BasicAuthentication";
+            })
             .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>(
                 authenticationScheme: "BasicAuthentication",
                 displayName: "Basic Authentication",

@@ -1,6 +1,8 @@
+using System.Net;
 using DripChip.Api.Extensions;
 using DripChip.Application.Extensions;
 using DripChip.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
