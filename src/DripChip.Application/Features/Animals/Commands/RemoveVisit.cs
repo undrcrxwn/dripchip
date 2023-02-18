@@ -2,7 +2,6 @@ using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using FluentValidation;
-using Mapster;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 

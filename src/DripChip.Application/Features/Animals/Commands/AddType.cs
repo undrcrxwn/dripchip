@@ -1,4 +1,3 @@
-using System.Net.WebSockets;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;

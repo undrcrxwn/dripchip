@@ -68,5 +68,8 @@ public static class AddVisit
         }
     }
     
-    public sealed record Response(long Id, DateTimeOffset DateTimeOfVisitLocationPoint);
+    public sealed record Response(
+        long Id,
+        long LocationPointId,
+        DateTimeOffset DateTimeOfVisitLocationPoint);
 }

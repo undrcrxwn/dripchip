@@ -56,19 +56,19 @@ public class AnimalsController : ApiControllerBase
         [FromRoute] long animalId, [FromQuery] SearchVisits.Query query) =>
         await Mediator.Send(query with { Id = animalId });
 
-    [HttpPost("{animalId}/locations/{pointId}")]
+    [HttpPost("{animalId}/locations/{pointId}"), Authorize]
     public async Task<IActionResult> AddVisit([FromRoute] long animalId, [FromRoute] long pointId)
     {
         var response = await Mediator.Send(new AddVisit.Command(animalId, pointId));
         return CreatedAtAction(nameof(GetById), new { AnimalId = response.Id }, response);
     }
 
-    [HttpPut("{animalId}/locations")]
+    [HttpPut("{animalId}/locations"), Authorize]
     public async Task<UpdateVisit.Response> UpdateVisitLocation(
         [FromRoute] long animalId, [FromBody] UpdateVisit.Command command) =>
         await Mediator.Send(command with { Id = animalId });
 
-    [HttpDelete("{animalId}/locations/{visitId}")]
+    [HttpDelete("{animalId}/locations/{visitId}"), Authorize]
     public async Task RemoveVisit([FromRoute] long animalId, [FromRoute] long visitId) =>
         await Mediator.Send(new RemoveVisit.Command(animalId, visitId));
 
