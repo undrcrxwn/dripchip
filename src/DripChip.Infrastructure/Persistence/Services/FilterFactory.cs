@@ -9,8 +9,7 @@ public class FilterFactory : IFilterFactory
 {
     public IFilter<T> CreateCaseInsensitiveContainsFilter<T>(Expression<Func<T, string>> selector, string? query) => query switch
     {
-        not null => new CaseInsensitiveContainsFilter<T>(selector, query),
+        not null => new CaseInsensitivePropertyContainsFilter<T>(selector, query),
         _ => new AllFilter<T>()
     };
-
 }

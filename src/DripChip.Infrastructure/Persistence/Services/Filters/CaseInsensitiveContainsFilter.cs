@@ -4,33 +4,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Infrastructure.Persistence.Services.Filters;
 
-public class CaseInsensitiveContainsFilter<T> : IFilter<T>
+public class PropertyFilter<TItem, TProperty> : IFilter<TItem>
 {
-    private readonly Expression<Func<T, string>> _selector;
-    private readonly string _pattern;
+    private readonly Expression<Func<TItem, TProperty>> _propertySelector;
+    private readonly Expression<Func<TProperty, bool>> _propertyPredicate;
 
-    public CaseInsensitiveContainsFilter(Expression<Func<T, string>> selector, string query)
+    protected PropertyFilter(
+        Expression<Func<TItem, TProperty>> propertySelector,
+        Expression<Func<TProperty, bool>> propertyPredicate)
     {
-        _selector = selector;
-        _pattern = $"%{query}%";
+        _propertySelector = propertySelector;
+        _propertyPredicate = propertyPredicate;
     }
 
-    public IQueryable<T> Apply(IQueryable<T> items)
+    public IQueryable<TItem> Apply(IQueryable<TItem> items)
     {
-        // Lambda parameter of type T just like 'x' in 'T x => ...'
-        var parameter = Expression.Parameter(typeof(T));
+        // Lambda parameter of type TItem just like 'x' in 'TItem x => ...'
+        var parameter = Expression.Parameter(typeof(TItem));
 
-        // Expression translation for 'items.Where(item => EF.Functions.ILike(selector(item), pattern))'
-        var predicate =
-            Expression.Lambda<Func<T, bool>>(
-                Expression.Call(
-                    instance: null,
-                    method: NpgsqlMethodReferences.CaseInsensitiveLikeMethod,
-                    Expression.Constant(EF.Functions),
-                    Expression.Invoke(_selector, parameter),
-                    Expression.Constant(_pattern)),
+        // Expression translation for 'item => _propertyPredicate(_propertySelector(item))'
+        var itemPredicate =
+            Expression.Lambda<Func<TItem, bool>>(
+                Expression.Invoke(
+                    expression: _propertyPredicate,
+                    arguments: Expression.Invoke(_propertySelector, parameter)),
                 parameter);
 
-        return items.Where(predicate);
+        return items.Where(itemPredicate);
     }
+}
+
+public class CaseInsensitivePropertyContainsFilter<T> : PropertyFilter<T, string>
+{
+    public CaseInsensitivePropertyContainsFilter(Expression<Func<T, string>> propertySelector, string query)
+        : base(propertySelector, property => EF.Functions.ILike(property, $"%{query}%")) { }
 }
