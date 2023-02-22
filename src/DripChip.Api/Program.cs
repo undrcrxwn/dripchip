@@ -1,8 +1,7 @@
-using System.Net;
 using DripChip.Api.Extensions;
 using DripChip.Application.Extensions;
 using DripChip.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Authentication;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +9,8 @@ builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(builder.Configuration)
     .AddApiServices(builder.Configuration);
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

@@ -17,7 +17,8 @@ public static class ConfigureServices
         
         return services
             .AddValidatorsFromAssembly(assembly)
-            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
             // Ignore the 'Cannot resolve symbol' error.
             // It is fake and caused by the fact Rider does not yet support some of .NET 7 features. 
             // See https://github.com/martinothamar/Mediator/issues/64

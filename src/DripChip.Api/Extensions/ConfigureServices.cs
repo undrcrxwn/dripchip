@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace DripChip.Api.Extensions;
 
@@ -19,6 +20,11 @@ public static class ConfigureServices
             .AddScoped<ICurrentUserProvider, CurrentUserProvider>()
             .AddEndpointsApiExplorer()
             .AddHealthChecks();
+        
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .Enrich.With<ActivityLoggingEnricher>()
+            .CreateLogger();
 
         services.AddControllers(options =>
         {
