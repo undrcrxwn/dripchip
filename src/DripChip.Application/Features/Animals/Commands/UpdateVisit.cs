@@ -49,7 +49,7 @@ public static class UpdateVisit
                 ?? throw new NotFoundException();
 
             var sortedVisits = animal.VisitedLocations
-                .OrderBy(visit => visit.DateTimeOfVisitLocationPoint)
+                .OrderBy(visitedLocation => visitedLocation.DateTimeOfVisitLocationPoint)
                 .ToList();
             
             var visitIndex = sortedVisits.IndexOf(visit);
