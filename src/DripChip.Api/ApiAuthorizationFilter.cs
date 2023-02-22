@@ -34,7 +34,7 @@ public class ApiAuthorizationFilter : IAsyncAuthorizationFilter
             context.Result = new ChallengeResult(scheme);
         
         // If the user has specified credentials and the credentials are invalid
-        if (!authorizeResult.Succeeded && context.HttpContext.Request.Headers.Authorization.Any())
+        if (!authorizeResult.Succeeded)
             return;
 
         var endpoint = context.HttpContext.GetEndpoint();
