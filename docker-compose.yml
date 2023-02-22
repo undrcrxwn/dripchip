@@ -19,7 +19,11 @@ services:
       - database
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings:DefaultConnection=Host=database;Port=5432;Database=animal-chipization;Username=dripchip;Password=FvXVPa5Nt9rkU7dZ
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=animal-chipization
+      - POSTGRES_USER=dripchip
+      - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
   
   tests:
     image: mrexpen/planet_olymp_phase1

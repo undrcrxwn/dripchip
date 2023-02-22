@@ -23,9 +23,15 @@ public static class ConfigureServices
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<IUserService, UserService>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
-        
+
+        var host = configuration["POSTGRES_HOST"];
+        var port = configuration["POSTGRES_PORT"];
+        var database = configuration["POSTGRES_DB"];
+        var username = configuration["POSTGRES_USER"];
+        var password = configuration["POSTGRES_PASSWORD"];
+
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql($"Host={host};Port={port};Database={database};Username={username};Password={password}"));
 
         services
             .AddIdentity<User, IdentityRole<int>>()
