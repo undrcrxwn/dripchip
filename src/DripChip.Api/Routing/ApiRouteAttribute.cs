@@ -10,7 +10,7 @@ namespace DripChip.Api.Routing;
 /// </summary>
 internal sealed class ApiRouteAttribute : RouteAttribute
 {
-    private const string Prefix = "api";
+    private const string Prefix = "api/v{version:apiVersion}";
     
     public ApiRouteAttribute() : base(Prefix) { }
     
