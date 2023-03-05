@@ -33,5 +33,5 @@ services:
     depends_on:
       - webapi
     environment:
-      SERVER_URL: http://webapi:8080/api
+      SERVER_URL: http://webapi:8080/api/v1
       STAGE: all
