@@ -19,9 +19,9 @@ public static class GetById
     internal sealed class Handler : IRequestHandler<Query, Response>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IUserService _users;
+        private readonly IUserRepository _users;
 
-        public Handler(IApplicationDbContext context, IUserService users)
+        public Handler(IApplicationDbContext context, IUserRepository users)
         {
             _context = context;
             _users = users;

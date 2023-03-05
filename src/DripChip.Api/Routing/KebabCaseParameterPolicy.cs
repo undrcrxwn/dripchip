@@ -6,7 +6,7 @@ namespace DripChip.Api.Routing;
 /// An endpoint parameter transformer that applies kebab-case naming convention to endpoint routes and parameter names.
 /// For example, turns '/Animal/8/AddType' into '/animals/8/add-type'.
 /// </summary>
-public class KebabCaseParameterPolicy : IOutboundParameterTransformer
+internal sealed class KebabCaseParameterPolicy : IOutboundParameterTransformer
 {
     public string? TransformOutbound(object? value) => value switch
     {

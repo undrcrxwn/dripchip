@@ -17,27 +17,26 @@ public sealed class ApplicationDbContext :
     public DbSet<Animal> Animals => Set<Animal>();
     public DbSet<Visit> AnimalLocationVisits => Set<Visit>();
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) => ChangeTracker.LazyLoadingEnabled = false;
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Animal>()
             .HasMany(x => x.AnimalTypes)
             .WithMany(x => x.Animals);
-        
+
         builder.Entity<Animal>()
             .HasOne(x => x.Chipper)
             .WithMany(x => x.ChippedAnimals);
-        
+
         builder.Entity<Animal>()
             .HasOne(x => x.ChippingLocation)
             .WithMany(x => x.ChippedAnimals);
-        
+
         builder.Entity<Animal>()
             .HasMany(x => x.VisitedLocations)
             .WithOne(x => x.Visitor);
-        
+
         base.OnModelCreating(builder);
     }
 }

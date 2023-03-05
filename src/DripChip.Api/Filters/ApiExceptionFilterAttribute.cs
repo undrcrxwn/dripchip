@@ -8,7 +8,7 @@ namespace DripChip.Api.Filters;
 /// An exception filter that modifies the given HTTP context state in accordance with the provided custom exception data.
 /// Is responsible for generating custom error responses, such as validation, authorization errors and others.
 /// </summary>
-public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
+internal sealed class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private static readonly Dictionary<Type, Action<ExceptionContext>> ExceptionHandlers = new()
     {
@@ -30,9 +30,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
         var type = context.Exception.GetType();
 
-        if (ExceptionHandlers.ContainsKey(type))
+        if (ExceptionHandlers.TryGetValue(type, out var handler))
         {
-            ExceptionHandlers[type].Invoke(context);
+            handler.Invoke(context);
             return;
         }
 

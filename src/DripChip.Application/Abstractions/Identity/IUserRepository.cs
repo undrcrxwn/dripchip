@@ -1,6 +1,9 @@
 namespace DripChip.Application.Abstractions.Identity;
 
-public interface IUserService
+/// <summary>
+/// User repository abstraction declaring infrastructure-dependent identity concerns.
+/// </summary>
+public interface IUserRepository
 {
     public IQueryable<IUser> Users { get; }
 
@@ -16,6 +19,4 @@ public interface IUserService
     public Task SetUsernameAsync(IUser user, string username);
     public Task SetEmailAsync(IUser user, string email);
     public Task SetPasswordAsync(IUser user, string password);
-
-    public Task SignOutAsync();
 }

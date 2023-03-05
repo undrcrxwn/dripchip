@@ -1,4 +1,3 @@
-using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Abstractions.Specifications;
@@ -18,10 +17,10 @@ public static class ConfigureServices
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddHostedService<DatabaseInitializer>()
+            .AddHostedService<DataStoreInitializer>()
             .AddSingleton<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
-            .AddScoped<IUserService, UserService>()
+            .AddScoped<IUserRepository, UserRepository>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
 
         var host = configuration["POSTGRES_HOST"];

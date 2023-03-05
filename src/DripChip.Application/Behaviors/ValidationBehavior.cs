@@ -3,7 +3,11 @@ using Mediator;
 
 namespace DripChip.Application.Behaviors;
 
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+/// <summary>
+/// Mediator pipeline behavior that validates every request passed to a handler.
+/// </summary>
+/// <remarks>https://github.com/jbogard/MediatR/wiki/Behaviors</remarks>/>
+internal sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
@@ -13,22 +17,22 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
     public async ValueTask<TResponse> Handle(TRequest message, CancellationToken cancellationToken, MessageHandlerDelegate<TRequest, TResponse> next)
     {
-        if (_validators.Any())
-        {
-            var context = new ValidationContext<TRequest>(message);
-
-            var validationResults = await Task.WhenAll(
-                _validators.Select(validator =>
-                    validator.ValidateAsync(context, cancellationToken)));
-
-            var failures = validationResults
-                .SelectMany(result => result.Errors)
-                .ToList();
-
-            if (failures.Any())
-                throw new Application.Exceptions.ValidationException(failures);
-        }
+        if (!_validators.Any())
+            return await next(message, cancellationToken);
         
+        var context = new ValidationContext<TRequest>(message);
+
+        var validationResults = await Task.WhenAll(
+            _validators.Select(validator =>
+                validator.ValidateAsync(context, cancellationToken)));
+
+        var failures = validationResults
+            .SelectMany(result => result.Errors)
+            .ToList();
+
+        if (failures.Any())
+            throw new Application.Exceptions.ValidationException(failures);
+
         return await next(message, cancellationToken);
     }
 }

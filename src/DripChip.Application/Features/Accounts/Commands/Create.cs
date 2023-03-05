@@ -34,10 +34,10 @@ public static class Create
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IUserService _users;
+        private readonly IUserRepository _users;
         private readonly ICurrentUserProvider _issuer;
 
-        public Handler(IApplicationDbContext context, IUserService users, ICurrentUserProvider issuer)
+        public Handler(IApplicationDbContext context, IUserRepository users, ICurrentUserProvider issuer)
         {
             _context = context;
             _users = users;

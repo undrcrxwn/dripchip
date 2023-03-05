@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace DripChip.Api.Controllers;
 
 [ApiRoute("animals/types")]
-public class AnimalTypesController : ApiControllerBase
+public sealed class AnimalTypesController : ApiControllerBase
 {
     [HttpGet("{typeId}")]
     public async Task<GetById.Response> GetById([FromRoute] long typeId) =>
         await Mediator.Send(new GetById.Query(typeId));
 
     [HttpPost, Authorize]
-    public async Task<IActionResult> Create([FromBody] Create.Command command)
+    public async Task<ActionResult<Create.Response>> Create([FromBody] Create.Command command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { TypeId = response.Id }, response);

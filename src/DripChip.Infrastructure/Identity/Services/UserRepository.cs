@@ -5,19 +5,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Infrastructure.Identity.Services;
 
-public class UserService : IUserService
+public class UserRepository : IUserRepository
 {
-    public IQueryable<IUser> Users => _userManager.Users;
-
     private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-
-    public UserService(UserManager<User> userManager, SignInManager<User> signInManager)
-    {
+    
+    public UserRepository(UserManager<User> userManager) =>
         _userManager = userManager;
-        _signInManager = signInManager;
-    }
 
+    public IQueryable<IUser> Users => _userManager.Users;
+    
     public async Task<IUser?> FindByIdAsync(int userId) =>
         await _userManager.FindByIdAsync(userId.ToString());
 
@@ -43,7 +39,7 @@ public class UserService : IUserService
         var user =
             await FindByIdAsync(userId)
             ?? throw new NotFoundException();
-        
+
         await DeleteAsync(user);
     }
 
@@ -52,13 +48,10 @@ public class UserService : IUserService
 
     public async Task SetUsernameAsync(IUser user, string username) =>
         await _userManager.SetUserNameAsync((User)user, username);
-    
+
     public async Task SetEmailAsync(IUser user, string email) =>
         await _userManager.SetEmailAsync((User)user, email);
-    
+
     public async Task SetPasswordAsync(IUser user, string password) =>
         await _userManager.SetPasswordAsync((User)user, password);
-    
-    public async Task SignOutAsync() =>
-        await _signInManager.SignOutAsync();
 }

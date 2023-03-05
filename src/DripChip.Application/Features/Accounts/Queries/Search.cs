@@ -2,7 +2,6 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Abstractions.Specifications;
 using DripChip.Application.Extensions;
-using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -30,10 +29,10 @@ public static class Search
     internal sealed class Handler : IRequestHandler<Query, IEnumerable<Response>>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IUserService _users;
+        private readonly IUserRepository _users;
         private readonly ISpecificationFactory _specifications;
 
-        public Handler(IApplicationDbContext context, IUserService users, ISpecificationFactory specifications)
+        public Handler(IApplicationDbContext context, IUserRepository users, ISpecificationFactory specifications)
         {
             _context = context;
             _users = users;
@@ -47,7 +46,7 @@ public static class Search
             var firstNameFilter = _specifications.CaseInsensitiveContains(request.FirstName);
             var lastNameFilter = _specifications.CaseInsensitiveContains(request.LastName);
 
-            var accounts =
+            var userAccounts =
                 from user in _users.Users.Where(x => x.Email!, emailFilter)
                 join account in _context.Accounts
                         .Where(x => x.FirstName, firstNameFilter)
@@ -56,17 +55,17 @@ public static class Search
                 select new { User = user, Account = account };
 
             // Pagination
-            accounts = accounts
+            userAccounts = userAccounts
                 .OrderBy(x => x.User.Id)
                 .Skip(request.From)
                 .Take(request.Size);
 
-            return await accounts
-                .Select(x => new Response(
-                    x.User.Id,
-                    x.Account.FirstName,
-                    x.Account.LastName,
-                    x.User.Email!))
+            return await userAccounts
+                .Select(userAccount => new Response(
+                    userAccount.User.Id,
+                    userAccount.Account.FirstName,
+                    userAccount.Account.LastName,
+                    userAccount.User.Email!))
                 .ToListAsync(cancellationToken);
         }
     }

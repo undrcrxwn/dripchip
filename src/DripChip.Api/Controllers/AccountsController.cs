@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;
 
-public class AccountsController : ApiControllerBase
+public sealed class AccountsController : ApiControllerBase
 {
     [HttpPost, ApiRoute("~/registration")]
-    public async Task<IActionResult> Register([FromBody] Create.Command command)
+    public async Task<ActionResult<Create.Response>> Register([FromBody] Create.Command command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);

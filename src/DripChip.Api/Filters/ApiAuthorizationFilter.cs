@@ -12,7 +12,7 @@ namespace DripChip.Api.Filters;
 /// Invalid credentials passed to the endpoint annotated with 'AllowAnonymous' will result in 401 Unauthorized status being returned.
 /// </example>
 /// </summary>
-public class ApiAuthorizationFilter : IAsyncAuthorizationFilter
+internal sealed class ApiAuthorizationFilter : IAsyncAuthorizationFilter
 {
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {

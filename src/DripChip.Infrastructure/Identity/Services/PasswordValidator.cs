@@ -5,6 +5,9 @@ using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Infrastructure.Identity.Services;
 
+/// <summary>
+/// Tells if a string is a valid user password that satisfies ASP.NET Core Identity requirements.
+/// </summary>
 public class PasswordValidator<T> : Application.Abstractions.Identity.IPasswordValidator<T>
 {
     private readonly UserManager<User> _userManager;

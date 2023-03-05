@@ -1,7 +1,8 @@
-using DripChip.Application.Abstractions.Identity;
+namespace DripChip.Application.Abstractions.Identity;
 
-namespace DripChip.Application.Abstractions;
-
+/// <summary>
+/// Authentication service abstraction declaring infrastructure-dependent identity concerns.
+/// </summary>
 public interface IAuthenticationService
 {
     /// <summary>

@@ -8,7 +8,7 @@ namespace DripChip.Api.Routing;
 /// The default pattern is /api/{route}
 /// If a route that starts with '~/' is provided, adds the default '/api' prefix to the beginning.
 /// </summary>
-public class ApiRouteAttribute : RouteAttribute
+internal sealed class ApiRouteAttribute : RouteAttribute
 {
     private const string Prefix = "api";
     

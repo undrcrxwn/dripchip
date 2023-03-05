@@ -3,14 +3,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace DripChip.Infrastructure.Persistence.Services;
 
-public class DatabaseInitializer : IHostedService
+/// <summary>
+/// Hosted services that initializes database on application start-up if it has not been initialized yet.
+/// </summary>
+internal class DataStoreInitializer : IHostedService
 {
     private readonly IServiceScopeFactory _scopeFactory;
 
-    public DatabaseInitializer(IServiceScopeFactory scopeFactory)
-    {
+    public DataStoreInitializer(IServiceScopeFactory scopeFactory) =>
         _scopeFactory = scopeFactory;
-    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {

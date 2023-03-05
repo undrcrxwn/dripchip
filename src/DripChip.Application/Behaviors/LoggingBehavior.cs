@@ -3,7 +3,12 @@ using Microsoft.Extensions.Logging;
 
 namespace DripChip.Application.Behaviors;
 
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IMessage
+/// <summary>
+/// Mediator pipeline behavior that logs every request handling.
+/// </summary>
+/// <remarks>https://github.com/jbogard/MediatR/wiki/Behaviors</remarks>/>
+internal sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IMessage
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 

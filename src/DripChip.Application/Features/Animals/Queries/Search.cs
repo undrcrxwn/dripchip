@@ -61,22 +61,22 @@ public static class Search
                 .Include(animal => animal.AnimalTypes)
                 .Include(animal => animal.VisitedLocations)
                 // Filtering
-                .Where(x =>
+                .Where(animal =>
                     request.StartDateTime == null ||
-                    x.ChippingDateTime >= request.StartDateTime)
-                .Where(x =>
+                    animal.ChippingDateTime >= request.StartDateTime)
+                .Where(animal =>
                     request.EndDateTime == null ||
-                    x.ChippingDateTime <= request.EndDateTime)
-                .Where(x =>
+                    animal.ChippingDateTime <= request.EndDateTime)
+                .Where(animal =>
                     request.ChipperId == null ||
-                    x.Chipper.Id == request.ChipperId)
-                .Where(x =>
+                    animal.Chipper.Id == request.ChipperId)
+                .Where(animal =>
                     request.ChippingLocationId == null ||
-                    x.ChippingLocation.Id == request.ChippingLocationId)
-                .Where(x => lifeStatus == null || x.LifeStatus == lifeStatus)
-                .Where(x => gender == null || x.Gender == gender)
+                    animal.ChippingLocation.Id == request.ChippingLocationId)
+                .Where(animal => lifeStatus == null || animal.LifeStatus == lifeStatus)
+                .Where(animal => gender == null || animal.Gender == gender)
                 // Pagination
-                .OrderBy(x => x.Id)
+                .OrderBy(animal => animal.Id)
                 .Skip(request.From)
                 .Take(request.Size);
 

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DripChip.Api.Controllers;
 
-public class AnimalsController : ApiControllerBase
+public sealed class AnimalsController : ApiControllerBase
 {
     [HttpGet("{animalId}")]
     public async Task<GetById.Response> GetById([FromRoute] long animalId) =>
@@ -16,7 +16,7 @@ public class AnimalsController : ApiControllerBase
         await Mediator.Send(query);
 
     [HttpPost, Authorize]
-    public async Task<IActionResult> Create([FromBody] Create.Command command)
+    public async Task<ActionResult<Create.Response>> Create([FromBody] Create.Command command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { AnimalId = response.Id }, response);
@@ -33,7 +33,7 @@ public class AnimalsController : ApiControllerBase
     #region AnimalTypes
 
     [HttpPost("{animalId}/types/{typeId}"), Authorize]
-    public async Task<IActionResult> AddType([FromRoute] long animalId, [FromRoute] long typeId)
+    public async Task<ActionResult<AddType.Response>> AddType([FromRoute] long animalId, [FromRoute] long typeId)
     {
         var response = await Mediator.Send(new AddType.Command(animalId, typeId));
         return CreatedAtAction(nameof(GetById), new { AnimalId = response.Id }, response);
@@ -49,7 +49,7 @@ public class AnimalsController : ApiControllerBase
 
     #endregion
 
-    #region Visits
+    #region Locations
 
     [HttpGet("{animalId}/locations")]
     public async Task<IEnumerable<SearchVisits.Response>> SearchVisits(

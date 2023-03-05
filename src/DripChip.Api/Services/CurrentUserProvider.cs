@@ -6,7 +6,7 @@ namespace DripChip.Api.Services;
 /// <summary>
 /// Provides brief information containing unique identifier and authentication data related to the request issuer.
 /// </summary>
-public class CurrentUserProvider : ICurrentUserProvider
+internal class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
