@@ -14,7 +14,7 @@ services:
     build:
       dockerfile: Dockerfile
     ports:
-      - "9000:80"
+      - "9000:8080"
     depends_on:
       - database
     environment:
@@ -33,5 +33,5 @@ services:
     depends_on:
       - webapi
     environment:
-      SERVER_URL: http://webapi:80/api
+      SERVER_URL: http://webapi:8080/api
       STAGE: all
