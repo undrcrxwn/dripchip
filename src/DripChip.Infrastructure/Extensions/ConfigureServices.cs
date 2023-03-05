@@ -1,7 +1,7 @@
 using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Filtering;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
+using DripChip.Application.Abstractions.Specifications;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;

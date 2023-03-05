@@ -1,15 +1,15 @@
 using System.Linq.Expressions;
-using DripChip.Application.Abstractions.Filtering;
+using DripChip.Application.Abstractions.Specifications;
 
 namespace DripChip.Application.Extensions;
 
 public static class QueryableExtensions
 {
-    public static IQueryable<TItem> Where<TItem>(this IQueryable<TItem> items, ISpecification<TItem> specification) =>
+    public static IQueryable<TItem> Where<TItem>(this IQueryable<TItem> items, Specification<TItem> specification) =>
         items.Where(specification.ToExpression());
 
     public static IQueryable<TItem> Where<TItem, TProperty>(this IQueryable<TItem> items,
-        Expression<Func<TItem, TProperty>> selector, ISpecification<TProperty> specification)
+        Expression<Func<TItem, TProperty>> selector, Specification<TProperty> specification)
     {
         var parameter = Expression.Parameter(typeof(TItem));
         var itemPredicate =

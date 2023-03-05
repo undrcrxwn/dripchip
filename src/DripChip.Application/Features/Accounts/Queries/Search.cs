@@ -1,6 +1,6 @@
-using DripChip.Application.Abstractions.Filtering;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
+using DripChip.Application.Abstractions.Specifications;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Entities;
 using FluentValidation;

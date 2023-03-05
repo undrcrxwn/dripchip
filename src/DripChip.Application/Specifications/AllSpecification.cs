@@ -1,9 +1,13 @@
 using System.Linq.Expressions;
-using DripChip.Application.Abstractions.Filtering;
+using DripChip.Application.Abstractions.Specifications;
 
 namespace DripChip.Application.Specifications;
 
-public sealed class AllSpecification<TItem> : ISpecification<TItem>
+/// <inheritdoc cref="Specification{TItem}"/>
+/// <summary>
+/// Specification that performs no filtering, so that any provided item is queried.
+/// </summary>
+public sealed class AllSpecification<TItem> : Specification<TItem>
 {
-    public Expression<Func<TItem, bool>> ToExpression() => _ => true;
+    public override Expression<Func<TItem, bool>> ToExpression() => _ => true;
 }

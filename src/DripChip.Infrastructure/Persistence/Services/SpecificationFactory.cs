@@ -1,13 +1,16 @@
-using System.Linq.Expressions;
-using DripChip.Application.Abstractions.Filtering;
+using DripChip.Application.Abstractions.Specifications;
 using DripChip.Application.Specifications;
-using DripChip.Infrastructure.Persistence.Services.Specifications;
+using DripChip.Infrastructure.Persistence.Specifications;
 
 namespace DripChip.Infrastructure.Persistence.Services;
 
-public class SpecificationFactory : ISpecificationFactory
+/// <summary>
+/// Concrete persistence layer implementation of the <see cref="ISpecificationFactory"/>.
+/// Depends on DBSM-specific features (e.g. Postgres operator ILIKE).
+/// </summary>
+public sealed class SpecificationFactory : ISpecificationFactory
 {
-    public ISpecification<string> CaseInsensitiveContains(string? query) => query switch
+    public Specification<string> CaseInsensitiveContains(string? query) => query switch
     {
         not null => new CaseInsensitiveContainsSpecification(query),
         _ => new AllSpecification<string>()
