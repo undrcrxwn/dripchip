@@ -19,7 +19,7 @@ public static class ConfigureServices
     {
         services
             .AddHostedService<DatabaseInitializer>()
-            .AddSingleton<IFilterFactory, FilterFactory>()
+            .AddSingleton<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<IUserService, UserService>()
             .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
