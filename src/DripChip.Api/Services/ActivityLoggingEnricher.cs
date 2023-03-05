@@ -5,6 +5,10 @@ using Serilog.Events;
 
 namespace DripChip.Api.Services;
 
+/// <summary>
+/// Serilog enricher that makes it possible to inject span, trace and parent IDs into the logger template.
+/// https://github.com/serilog/serilog/wiki/Enrichment
+/// </summary>
 public class ActivityLoggingEnricher : ILogEventEnricher
 {
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)

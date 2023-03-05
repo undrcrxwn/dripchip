@@ -8,6 +8,10 @@ using Microsoft.Extensions.Options;
 
 namespace DripChip.Api.Services;
 
+/// <summary>
+/// Authentication handler that validates user credentials, extracted from the 'WWW-Authenticate' header as Base64-encoded
+/// colon-separated username-password pair.
+/// </summary>
 public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private static readonly Regex AuthorizationHeaderRegex = new("Basic (.*)");

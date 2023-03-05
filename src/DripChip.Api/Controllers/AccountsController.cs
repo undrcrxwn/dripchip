@@ -1,4 +1,4 @@
-using DripChip.Api.Attributes;
+using DripChip.Api.Routing;
 using DripChip.Application.Features.Accounts.Commands;
 using DripChip.Application.Features.Accounts.Queries;
 using Microsoft.AspNetCore.Authorization;

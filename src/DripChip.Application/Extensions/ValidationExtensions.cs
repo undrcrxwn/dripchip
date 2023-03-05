@@ -11,6 +11,9 @@ public static class ValidationExtensions
         ruleBuilder.CustomAsync(async (property, context, _) =>
             await customValidator.ValidateAsync(context, property));
 
+    /// <summary>
+    /// Checks whether the given property can be parsed into a value of the specified enum.
+    /// </summary>
     public static IRuleBuilder<T, string> IsInEnum<T>(
         this IRuleBuilder<T, string> ruleBuilder, Type enumType, bool ignoreCase = true) =>
         ruleBuilder.Custom((property, context) =>

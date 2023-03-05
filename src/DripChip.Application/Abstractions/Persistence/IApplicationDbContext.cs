@@ -3,6 +3,9 @@ using DripChip.Domain.Entities;
 
 namespace DripChip.Application.Abstractions.Persistence;
 
+/// <summary>
+/// Data access EF Core-dependent abstraction for infrastructure-level persistence concerns.
+/// </summary>
 public interface IApplicationDbContext
 {
     public DbSet<Account> Accounts { get; }

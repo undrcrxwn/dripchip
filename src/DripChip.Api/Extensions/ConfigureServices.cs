@@ -1,4 +1,4 @@
-using DripChip.Api.Attributes;
+using DripChip.Api.Filters;
 using DripChip.Api.Routing;
 using DripChip.Api.Services;
 using DripChip.Application.Abstractions;
@@ -21,11 +21,13 @@ public static class ConfigureServices
             .AddEndpointsApiExplorer()
             .AddHealthChecks();
         
+        // Logging (Serilog)
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .Enrich.With<ActivityLoggingEnricher>()
             .CreateLogger();
 
+        // Controllers, naming conventions and request filtering
         services.AddControllers(options =>
         {
             var transformer = new KebabCaseParameterPolicy();
@@ -34,16 +36,22 @@ public static class ConfigureServices
             options.Filters.Add<ApiAuthorizationFilter>();
         });
 
+        // Swagger UI
         services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "DripChip API", Version = "v1" });
 
             options.CustomSchemaIds(type =>
             {
+                // Ignored parts of namespaces, generally CQRS-conventional names,
+                // such as 'Queries' and 'Commands'. These are skipped when generating
+                // Swagger names for the public DTOs.
                 var ignoredIdentifiers = configuration
                     .GetSection(SwaggerIgnoredNamespaceIdentifiersKey)
                     .Get<string[]>()!;
 
+                // Generates unique and user-friendly names for CQRS entities.
+                // For example, 'Features.Accounts.Commands.Create.Command' gets turned into 'AccountsCreateCommand'.
                 var lastNames = type.FullName!.Split('.')
                     .Except(ignoredIdentifiers)
                     .TakeLast(2)
@@ -52,6 +60,7 @@ public static class ConfigureServices
                 return string.Join(string.Empty, lastNames);
             });
 
+            // Enables Swagger UI authorization features
             options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
             {
                 Name = "Authorization",
@@ -77,6 +86,7 @@ public static class ConfigureServices
             });
         });
 
+        // Security (authentication and authorization)
         services
             .AddAuthentication(options =>
             {
