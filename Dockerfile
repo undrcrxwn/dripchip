@@ -1,6 +1,6 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
 
 # Copy project files
 COPY /src .

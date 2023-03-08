@@ -4,8 +4,8 @@ namespace DripChip.Domain.Entities;
 /// <summary>
 /// Abstraction containing common entity state (e.g. identity, annotations).
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public abstract class EntityBase<T>
+/// <typeparam name="TIdentifier">Type of entity identifier (primary key).</typeparam>
+public abstract class EntityBase<TIdentifier>
 {
-    public T Id { get; set; }
+    public TIdentifier Id { get; set; }
 }
