@@ -14,5 +14,5 @@ public interface IApplicationDbContext
     public DbSet<Animal> Animals { get; }
     public DbSet<Visit> AnimalLocationVisits { get; }
 
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

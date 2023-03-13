@@ -3,19 +3,13 @@ using Mapster;
 
 namespace DripChip.Application;
 
-public class Mapping : IRegister
+public sealed class Mapping : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
         // Entity to ID
-        config.NewConfig<AnimalType, long>()
-            .MapWith(point => point.Id);
-
-        config.NewConfig<LocationPoint, long>()
-            .MapWith(point => point.Id);
-
-        config.NewConfig<Visit, long>()
-            .MapWith(visit => visit.Id);
+        config.NewConfig<EntityBase<long>, long>()
+            .MapWith(entity => entity.Id);
 
         // Enumeration to name
         config.NewConfig<Enum, string>()
