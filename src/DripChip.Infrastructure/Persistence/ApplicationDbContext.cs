@@ -21,6 +21,7 @@ public sealed class ApplicationDbContext :
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // Relationships
         builder.Entity<Animal>()
             .HasMany(x => x.AnimalTypes)
             .WithMany(x => x.Animals);
