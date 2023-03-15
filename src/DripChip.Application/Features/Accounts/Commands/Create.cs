@@ -3,11 +3,11 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Application.Models.Identity;
 using DripChip.Domain.Entities;
 using FluentValidation;
 using Mapster;
 using Mediator;
-using Microsoft.EntityFrameworkCore;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Accounts.Commands;
@@ -54,9 +54,12 @@ public static class Create
                 throw new AlreadyExistsException("User with the specified email already exists.");
 
             // User creation
-            var errorDescriptions = await _users.CreateAsync(request.Email, request.Password);
-            if (errorDescriptions is not null)
-                throw new ValidationException(nameof(request.Password), errorDescriptions);
+            var userCreationResult = await _users.CreateAsync(request.Email, request.Password);
+            if (userCreationResult is UserCreationResult.Failure failure)
+                throw new ValidationException(nameof(request.Password), failure.Reasons);
+
+            if (userCreationResult is not UserCreationResult.Success)
+                throw new InvalidOperationException();
 
             var user =
                 await _users.FindByEmailAsync(request.Email)

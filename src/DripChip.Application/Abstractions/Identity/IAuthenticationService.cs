@@ -1,3 +1,5 @@
+using DripChip.Application.Models.Identity;
+
 namespace DripChip.Application.Abstractions.Identity;
 
 /// <summary>
@@ -8,6 +10,9 @@ public interface IAuthenticationService
     /// <summary>
     /// Authenticates user by credentials.
     /// </summary>
-    /// <returns>User ID if the specified credentials are valid, otherwise null.</returns>
-    public Task<IUser?> AuthenticateAsync(string username, string password);
+    /// <returns>
+    /// Authentication result: <see cref="AuthenticationResult.Success"/> with <see cref="IUser"/>
+    /// or <see cref="AuthenticationResult.Failure"/> with reason.
+    /// </returns>
+    public Task<AuthenticationResult> AuthenticateAsync(string username, string password);
 }

@@ -1,3 +1,5 @@
+using DripChip.Application.Models.Identity;
+
 namespace DripChip.Application.Abstractions.Identity;
 
 /// <summary>
@@ -11,7 +13,7 @@ public interface IUserRepository
     public Task<IUser?> FindByEmailAsync(string email);
 
     /// <returns>Error descriptions if failed, otherwise null.</returns>
-    public Task<IEnumerable<string>?> CreateAsync(string email, string password);
+    public Task<UserCreationResult> CreateAsync(string email, string password);
 
     public Task DeleteAsync(int userId);
     public Task DeleteAsync(IUser user);

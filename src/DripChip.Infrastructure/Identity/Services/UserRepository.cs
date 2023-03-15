@@ -1,5 +1,6 @@
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Exceptions;
+using DripChip.Application.Models.Identity;
 using DripChip.Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,19 +9,19 @@ namespace DripChip.Infrastructure.Identity.Services;
 public class UserRepository : IUserRepository
 {
     private readonly UserManager<User> _userManager;
-    
+
     public UserRepository(UserManager<User> userManager) =>
         _userManager = userManager;
 
     public IQueryable<IUser> Users => _userManager.Users;
-    
+
     public async Task<IUser?> FindByIdAsync(int userId) =>
         await _userManager.FindByIdAsync(userId.ToString());
 
     public async Task<IUser?> FindByEmailAsync(string email) =>
         await _userManager.FindByEmailAsync(email);
 
-    public async Task<IEnumerable<string>?> CreateAsync(string email, string password)
+    public async Task<UserCreationResult> CreateAsync(string email, string password)
     {
         var user = new User
         {
@@ -30,15 +31,15 @@ public class UserRepository : IUserRepository
 
         var result = await _userManager.CreateAsync(user, password);
         return result.Succeeded
-            ? null
-            : result.Errors.Select(x => x.Description);
+            ? new UserCreationResult.Success()
+            : new UserCreationResult.Failure(result.Errors.Select(error => error.Description));
     }
 
     public async Task DeleteAsync(int userId)
     {
         var user =
             await FindByIdAsync(userId)
-            ?? throw new NotFoundException();
+            ?? throw new NotFoundException(nameof(User), userId);
 
         await DeleteAsync(user);
     }

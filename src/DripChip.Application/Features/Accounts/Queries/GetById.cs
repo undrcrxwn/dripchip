@@ -2,7 +2,6 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;

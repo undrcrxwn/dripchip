@@ -3,6 +3,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
+using DripChip.Application.Models.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using IAuthenticationService = DripChip.Application.Abstractions.Identity.IAuthenticationService;
@@ -53,14 +54,18 @@ internal class BasicAuthenticationHandler : AuthenticationHandler<Authentication
         var password = credentials[1];
 
         // Authenticate user
-        var user = await _authenticationService.AuthenticateAsync(email, password);
-        if (user is null)
-            return AuthenticateResult.Fail("The specified credentials are invalid.");
+        var authenticationResult = await _authenticationService.AuthenticateAsync(email, password);
+
+        if (authenticationResult is AuthenticationResult.Failure failure)
+            return AuthenticateResult.Fail(failure.Reason);
+
+        if (authenticationResult is not AuthenticationResult.Success success)
+            throw new InvalidOperationException();
 
         var claims = new Claim[]
         {
-            new(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.Integer),
-            new(ClaimTypes.Name, user.UserName!)
+            new(ClaimTypes.NameIdentifier, success.User.Id.ToString(), ClaimValueTypes.Integer),
+            new(ClaimTypes.Name, success.User.UserName!)
         };
 
         var identity = new ClaimsIdentity(claims, Scheme.Name);
