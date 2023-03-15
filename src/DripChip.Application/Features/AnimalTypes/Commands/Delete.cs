@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ public static class Delete
                 await _context.AnimalTypes
                     .Include(type => type.Animals)
                     .FirstOrDefaultAsync(type => type.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException();
+                ?? throw new NotFoundException(nameof(AnimalType), request.Id);
         
             if (animalType.Animals.Any())
                 throw new ValidationException(nameof(request.Id), "The specified animal type is attached to one or more animals.");

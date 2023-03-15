@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Entities;
 using FluentValidation;
 using Mapster;
 using Mediator;
@@ -26,7 +27,7 @@ public static class GetById
         {
             var entity =
                 await _context.LocationPoints.FindAsync(request.Id)
-                ?? throw new NotFoundException();
+                ?? throw new NotFoundException(nameof(LocationPoint), request.Id);
 
             return entity.Adapt<Response>();
         }

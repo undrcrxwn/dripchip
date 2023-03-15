@@ -30,17 +30,17 @@ public static class Create
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var sameExists = await _context.LocationPoints.AnyAsync(x =>
+            var sameExists = await _context.LocationPoints.AnyAsync(locationPoint =>
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                x.Latitude == request.Latitude &&
+                locationPoint.Latitude == request.Latitude &&
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
-                x.Longitude == request.Longitude);
+                locationPoint.Longitude == request.Longitude, cancellationToken);
 
             if (sameExists)
                 throw new AlreadyExistsException();
         
             var entity = request.Adapt<LocationPoint>();
-            await _context.LocationPoints.AddAsync(entity);
+            await _context.LocationPoints.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         
             return entity.Adapt<Response>();

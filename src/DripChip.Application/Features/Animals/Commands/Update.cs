@@ -37,7 +37,7 @@ public static class Update
             RuleFor(x => x.ChippingLocationId).LocationPointId();
         }
     }
-    
+
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -46,21 +46,18 @@ public static class Update
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var animal =
-                await _context.Animals
+            var query =
+                from queriedAnimal in _context.Animals
                     .Include(animal => animal.AnimalTypes)
                     .Include(animal => animal.VisitedLocations)
-                    .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException();
+                where queriedAnimal.Id == request.Id
+                join chipper in _context.Accounts on request.ChipperId equals chipper.Id
+                join chippingPoint in _context.LocationPoints on request.ChippingLocationId equals chippingPoint.Id
+                select queriedAnimal;
 
-            var chipperNotFound = await _context.Accounts
-                .AllAsync(account => account.Id != request.ChipperId, cancellationToken);
-            
-            var chippingLocationNotFound = await _context.LocationPoints
-                .AllAsync(location => location.Id != request.ChippingLocationId, cancellationToken);
-            
-            if (chipperNotFound || chippingLocationNotFound)
-                throw new NotFoundException();
+            var animal =
+                await query.FirstOrDefaultAsync(cancellationToken)
+                ?? throw new NotFoundException();
 
             var modifiedAnimal = request.Adapt<Animal>();
             modifiedAnimal.AnimalTypes = animal.AnimalTypes;
@@ -84,7 +81,7 @@ public static class Update
             return modifiedAnimal.Adapt<Response>();
         }
     }
-    
+
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

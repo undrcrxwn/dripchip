@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Entities;
 using FluentValidation;
 using Mapster;
 using Mediator;
@@ -24,11 +25,10 @@ public static class GetById
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var entity = await _context.AnimalTypes.FindAsync(request.Id);
+            var entity =
+                await _context.AnimalTypes.FindAsync(request.Id)
+                ?? throw new NotFoundException(nameof(AnimalType), request.Id);
 
-            if (entity is null)
-                throw new NotFoundException();
-        
             return entity.Adapt<Response>();
         }
     }

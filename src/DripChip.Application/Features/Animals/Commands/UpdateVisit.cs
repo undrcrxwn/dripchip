@@ -34,18 +34,18 @@ public static class UpdateVisit
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
+            var query =
+                from queriedAnimal in _context.Animals.Include(animal => animal.VisitedLocations)
+                where queriedAnimal.Id == request.Id
+                join locationPoint in _context.LocationPoints on request.LocationPointId equals locationPoint.Id
+                select queriedAnimal;
+
             var animal =
-                await _context.Animals
-                    .Include(animal => animal.VisitedLocations)
-                    .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
+                await query.FirstOrDefaultAsync(cancellationToken)
                 ?? throw new NotFoundException();
 
             var visit =
                 animal.VisitedLocations.FirstOrDefault(visit => visit.Id == request.VisitedLocationPointId)
-                ?? throw new NotFoundException();
-
-            var newLocationPoint =
-                await _context.LocationPoints.FindAsync(request.LocationPointId)
                 ?? throw new NotFoundException();
 
             var sortedVisits = animal.VisitedLocations
@@ -70,7 +70,7 @@ public static class UpdateVisit
                 throw new ValidationException(nameof(request.VisitedLocationPointId),
                     "The specified location point matches the animal's chipping location.");
 
-            visit.LocationPoint = newLocationPoint;
+            visit.LocationPointId = request.LocationPointId;
 
             await _context.SaveChangesAsync(cancellationToken);
             return visit.Adapt<Response>();

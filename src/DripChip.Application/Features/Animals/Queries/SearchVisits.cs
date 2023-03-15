@@ -34,21 +34,17 @@ public static class SearchVisits
 
         public async ValueTask<IEnumerable<Response>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var animals = _context.AnimalLocationVisits
-                // Filtering
-                .Where(x => x.VisitorId == request.Id)
-                .Where(x =>
-                    request.StartDateTime == null ||
-                    x.DateTimeOfVisitLocationPoint >= request.StartDateTime)
-                .Where(x =>
-                    request.EndDateTime == null ||
-                    x.DateTimeOfVisitLocationPoint <= request.EndDateTime)
-                // Pagination
+            var query =
+                from visit in _context.AnimalLocationVisits
+                where visit.VisitorId == request.Id
+                where visit.DateTimeOfVisitLocationPoint >= request.StartDateTime || request.StartDateTime == null
+                where visit.DateTimeOfVisitLocationPoint <= request.EndDateTime || request.EndDateTime == null
+                select visit;
+
+            return await query
                 .OrderBy(x => x.Id)
                 .Skip(request.From)
-                .Take(request.Size);
-
-            return await animals
+                .Take(request.Size)
                 .ProjectToType<Response>()
                 .ToListAsync(cancellationToken);
         }

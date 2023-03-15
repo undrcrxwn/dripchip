@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ public static class Delete
                     .Include(point => point.ChippedAnimals)
                     .Include(point => point.AnimalVisits)
                     .FirstOrDefaultAsync(point => point.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException();
+                ?? throw new NotFoundException(nameof(LocationPoint), request.Id);
         
             if (locationPoint.ChippedAnimals.Any())
                 throw new ValidationException(nameof(request.Id), "The specified location is a chipping point for one or more animals.");

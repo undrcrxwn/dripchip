@@ -50,7 +50,7 @@ public static class AddVisit
                 throw new ValidationException(nameof(request.LocationPointId),
                     "The animal's location cannot be changed, since the animal is dead.");
 
-            if (animal.VisitedLocations.Any() && animal.VisitedLocations.Last().LocationPointId == locationPoint.Id)
+            if (animal.VisitedLocations.LastOrDefault()?.LocationPointId == locationPoint.Id)
                 throw new ValidationException(nameof(request.LocationPointId),
                     "The specified location point matches the animal's current location point.");
 

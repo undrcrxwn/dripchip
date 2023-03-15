@@ -5,6 +5,7 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using FluentValidation;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Application.Features.Accounts.Commands;
 
@@ -47,27 +48,29 @@ public static class Update
             if (request.Id != _issuer.AccountId)
                 throw new ForbiddenException();
 
-            var user =
-                await _users.FindByIdAsync(request.Id)
+            var query =
+                from account in _context.Accounts
+                join user in _users.Users on account.Id equals user.Id
+                where user.Id == request.Id
+                select new { Account = account, User = user };
+
+            var result =
+                await query.FirstOrDefaultAsync(cancellationToken)
                 ?? throw new NotFoundException();
 
-            var account =
-                await _context.Accounts.FindAsync(request.Id)
-                ?? throw new NotFoundException();
+            result.Account.FirstName = request.FirstName;
+            result.Account.LastName = request.LastName;
 
-            account.FirstName = request.FirstName;
-            account.LastName = request.LastName;
-
-            await _users.SetEmailAsync(user, request.Email);
-            await _users.SetUsernameAsync(user, request.Email);
-            await _users.SetPasswordAsync(user, request.Password);
+            await _users.SetEmailAsync(result.User, request.Email);
+            await _users.SetUsernameAsync(result.User, request.Email);
+            await _users.SetPasswordAsync(result.User, request.Password);
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response(
-                user.Id,
-                account.FirstName,
-                account.LastName,
-                user.Email!);
+                result.User.Id,
+                result.Account.FirstName,
+                result.Account.LastName,
+                result.User.Email!);
         }
     }
 
