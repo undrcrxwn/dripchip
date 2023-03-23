@@ -14,8 +14,7 @@ internal sealed class ApiRouteAttribute : RouteAttribute
     
     public ApiRouteAttribute() : base(Prefix) { }
     
-    public ApiRouteAttribute(
-        [StringSyntax("Route")] string template)
+    public ApiRouteAttribute(string template)
         : base(template.StartsWith("~/")
             ? $"~/{Prefix}/{template[2..]}"
             : $"{Prefix}/{template}") { }

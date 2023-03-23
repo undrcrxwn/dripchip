@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 EXPOSE 8080
 
@@ -10,7 +10,7 @@ RUN dotnet restore "DripChip.Api/DripChip.Api.csproj"
 RUN dotnet publish "DripChip.Api/DripChip.Api.csproj" -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-preview
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "DripChip.Api.dll"]
