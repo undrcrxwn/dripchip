@@ -11,12 +11,12 @@ namespace DripChip.Application.Features.Animals.Queries;
 public static class GetById
 {
     public sealed record Query(long Id) : IRequest<Response>;
-
+    
     public sealed class Validator : AbstractValidator<Query>
     {
         public Validator() => RuleFor(x => x.Id).AnimalId();
     }
-
+    
     internal sealed class Handler : IRequestHandler<Query, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -25,17 +25,18 @@ public static class GetById
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var entity =
-                await _context.Animals
-                    .Include(animal => animal.AnimalTypes)
-                    .Include(animal => animal.VisitedLocations)
-                    .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException();
+            var entity = await _context.Animals
+                .Include(animal => animal.AnimalTypes)
+                .Include(animal => animal.VisitedLocations)
+                .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken);
+
+            if (entity is null)
+                throw new NotFoundException();
 
             return entity.Adapt<Response>();
         }
     }
-
+    
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

@@ -57,22 +57,30 @@ public static class Search
                 ? Enum.Parse<AnimalGender>(request.Gender, ignoreCase: true)
                 : null;
 
-            var query =
-                from animal in _context.Animals
-                    .Include(animal => animal.AnimalTypes)
-                    .Include(animal => animal.VisitedLocations)
-                where animal.ChippingDateTime >= request.StartDateTime || request.StartDateTime == null
-                where animal.ChippingDateTime <= request.EndDateTime || request.EndDateTime == null
-                where animal.ChipperId == request.ChipperId || request.ChipperId == null
-                where animal.ChippingLocationId == request.ChippingLocationId || request.ChippingLocationId == null
-                where animal.LifeStatus == lifeStatus || lifeStatus == null
-                where animal.Gender == gender || gender == null
-                select animal;
-
-            return await query
+            var animals = _context.Animals
+                .Include(animal => animal.AnimalTypes)
+                .Include(animal => animal.VisitedLocations)
+                // Filtering
+                .Where(animal =>
+                    request.StartDateTime == null ||
+                    animal.ChippingDateTime >= request.StartDateTime)
+                .Where(animal =>
+                    request.EndDateTime == null ||
+                    animal.ChippingDateTime <= request.EndDateTime)
+                .Where(animal =>
+                    request.ChipperId == null ||
+                    animal.Chipper.Id == request.ChipperId)
+                .Where(animal =>
+                    request.ChippingLocationId == null ||
+                    animal.ChippingLocation.Id == request.ChippingLocationId)
+                .Where(animal => lifeStatus == null || animal.LifeStatus == lifeStatus)
+                .Where(animal => gender == null || animal.Gender == gender)
+                // Pagination
                 .OrderBy(animal => animal.Id)
                 .Skip(request.From)
-                .Take(request.Size)
+                .Take(request.Size);
+
+            return await animals
                 .ProjectToType<Response>()
                 .ToListAsync(cancellationToken);
         }

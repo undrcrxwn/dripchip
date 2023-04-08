@@ -4,7 +4,6 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using FluentValidation;
 using Mediator;
-using Microsoft.EntityFrameworkCore;
 
 namespace DripChip.Application.Features.Accounts.Queries;
 
@@ -30,18 +29,15 @@ public static class GetById
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var query =
-                from account in _context.Accounts
-                where account.Id == request.Id
-                join user in _users.Users on request.Id equals user.Id
-                select new Response(
-                    user.Id,
-                    account.FirstName,
-                    account.LastName,
-                    user.Email);
+            var user =
+                await _users.FindByIdAsync(request.Id)
+                ?? throw new NotFoundException();
+        
+            var account =
+                await _context.Accounts.FindAsync(request.Id)
+                ?? throw new NotFoundException();
 
-            return await query.FirstOrDefaultAsync(cancellationToken)
-                   ?? throw new NotFoundException();
+            return new Response(user.Id, account.FirstName, account.LastName, user.Email!);
         }
     }
 

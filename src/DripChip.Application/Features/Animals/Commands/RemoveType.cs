@@ -1,7 +1,6 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Domain.Entities;
 using FluentValidation;
 using Mapster;
 using Mediator;
@@ -35,12 +34,12 @@ public static class RemoveType
                 await _context.Animals
                     .Include(animal => animal.AnimalTypes)
                     .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Animal), request.AnimalId);
+                ?? throw new NotFoundException();
 
             var animalType =
                 await _context.AnimalTypes.FindAsync(request.AnimalTypeId)
-                ?? throw new NotFoundException(nameof(AnimalType), request.AnimalTypeId);
-
+                ?? throw new NotFoundException();
+        
             if (!animal.AnimalTypes.Contains(animalType))
                 throw new NotFoundException();
 

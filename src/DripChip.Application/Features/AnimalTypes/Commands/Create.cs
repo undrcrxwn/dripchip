@@ -25,8 +25,9 @@ public static class Create
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var sameExists = await _context.AnimalTypes
-                .AnyAsync(animalType => animalType.Type == request.Type, cancellationToken);
+            var sameExists = await _context.AnimalTypes.AnyAsync(x =>
+                x.Type == request.Type, cancellationToken);
+
             if (sameExists)
                 throw new AlreadyExistsException();
         

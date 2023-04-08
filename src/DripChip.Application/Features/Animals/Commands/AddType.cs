@@ -29,25 +29,22 @@ public static class AddType
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var query =
-                from animal in _context.Animals
+            var animal =
+                await _context.Animals
                     .Include(animal => animal.AnimalTypes)
                     .Include(animal => animal.VisitedLocations)
-                where animal.Id == request.AnimalId
-                join animalType in _context.AnimalTypes on request.AnimalTypeId equals animalType.Id
-                select new { Animal = animal, AnimalType = animalType };
-
-            var result =
-                await query.FirstOrDefaultAsync(cancellationToken)
+                    .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
                 ?? throw new NotFoundException();
 
-            if (!result.Animal.AnimalTypes.Contains(result.AnimalType))
-            {
-                result.Animal.AnimalTypes.Add(result.AnimalType);
-                await _context.SaveChangesAsync(cancellationToken);
-            }
+            var animalType =
+                await _context.AnimalTypes.FindAsync(request.AnimalTypeId)
+                ?? throw new NotFoundException();
 
-            return result.Animal.Adapt<Response>();
+            if (!animal.AnimalTypes.Contains(animalType))
+                animal.AnimalTypes.Add(animalType);
+
+            await _context.SaveChangesAsync(cancellationToken);
+            return animal.Adapt<Response>();
         }
     }
 

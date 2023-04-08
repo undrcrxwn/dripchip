@@ -49,7 +49,9 @@ public static class Create
             if (_issuer.IsAuthenticated)
                 throw new ForbiddenException();
             
-            var sameExists = await _users.FindByEmailAsync(request.Email) is not null;
+            var sameExists = await _users.Users.AnyAsync(user =>
+                user.Email == request.Email, cancellationToken);
+
             if (sameExists)
                 throw new AlreadyExistsException("User with the specified email already exists.");
 

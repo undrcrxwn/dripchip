@@ -11,7 +11,7 @@ namespace DripChip.Application.Features.Animals.Commands;
 public static class ReplaceType
 {
     public sealed record Command(long Id, long OldTypeId, long NewTypeId) : IRequest<Response>;
-
+    
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
@@ -21,7 +21,7 @@ public static class ReplaceType
             RuleFor(x => x.NewTypeId).AnimalTypeId();
         }
     }
-
+    
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -30,31 +30,31 @@ public static class ReplaceType
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var query =
-                from animal in _context.Animals.Include(animal => animal.AnimalTypes)
-                join animalType in _context.AnimalTypes.AsNoTracking() on request.NewTypeId equals animalType.Id
-                where animal.Id == request.Id
-                select new { Animal = animal, NewAnimalType = animalType };
-
-            var result =
-                await query.FirstOrDefaultAsync(cancellationToken)
+            var animal =
+                await _context.Animals
+                    .Include(animal => animal.AnimalTypes)
+                    .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
                 ?? throw new NotFoundException();
 
-            if (result.Animal.AnimalTypes.Any(animalType => animalType.Id == result.NewAnimalType.Id))
+            var newAnimalType =
+                await _context.AnimalTypes.FindAsync(request.NewTypeId)
+                ?? throw new NotFoundException();
+
+            if (animal.AnimalTypes.Contains(newAnimalType))
                 throw new AlreadyExistsException();
 
-            var oldAnimalType =
-                result.Animal.AnimalTypes.SingleOrDefault(animalType => animalType.Id == request.OldTypeId)
-                ?? throw new NotFoundException();
-
-            result.Animal.AnimalTypes.Remove(oldAnimalType);
-            result.Animal.AnimalTypes.Add(result.NewAnimalType);
+            var oldAnimalType = animal.AnimalTypes.SingleOrDefault(animalType => animalType.Id == request.OldTypeId);
+            if (oldAnimalType is null)
+                throw new NotFoundException();
+        
+            animal.AnimalTypes.Remove(oldAnimalType);
+            animal.AnimalTypes.Add(newAnimalType);
 
             await _context.SaveChangesAsync(cancellationToken);
-            return result.Animal.Adapt<Response>();
+            return animal.Adapt<Response>();
         }
     }
-
+    
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

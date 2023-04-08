@@ -1,7 +1,6 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -33,15 +32,14 @@ public static class RemoveVisit
                 await _context.Animals
                     .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.AnimalId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Animal), request.AnimalId);
+                ?? throw new NotFoundException();
 
-            var visit =
-                animal.VisitedLocations.FirstOrDefault(visit => visit.Id == request.VisitId)
-                ?? throw new NotFoundException(nameof(Visit), request.VisitId);
+            var visit = animal.VisitedLocations.FirstOrDefault(visit => visit.Id == request.VisitId);
+            if (visit is null)
+                throw new NotFoundException();
 
             animal.VisitedLocations.Remove(visit);
 
-            // Remove the first visit if it matches the chipping location
             if (animal.VisitedLocations.FirstOrDefault()?.LocationPointId == animal.ChippingLocationId)
                 animal.VisitedLocations.RemoveAt(0);
         

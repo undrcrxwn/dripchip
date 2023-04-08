@@ -20,7 +20,7 @@ public static class Create
         string Gender,
         int ChipperId,
         long ChippingLocationId) : IRequest<Response>;
-
+    
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
@@ -35,7 +35,7 @@ public static class Create
             RuleFor(x => x.ChippingLocationId).LocationPointId();
         }
     }
-
+    
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -45,8 +45,8 @@ public static class Create
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             // Animal types validation
-            var animalTypes = await _context.AnimalTypes
-                .Where(animalType => request.AnimalTypes.Contains(animalType.Id))
+            var animalTypes = await _context.AnimalTypes.Where(animalType =>
+                    request.AnimalTypes.Contains(animalType.Id))
                 .ToListAsync(cancellationToken);
 
             if (request.AnimalTypes.Count() > animalTypes.Count)
@@ -67,14 +67,14 @@ public static class Create
             entity.Chipper = chipper;
             entity.ChippingLocation = chippingLocationPoint;
             entity.ChippingDateTime = DateTimeOffset.UtcNow.Trim(TimeSpan.TicksPerMillisecond);
-
+        
             await _context.Animals.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return entity.Adapt<Response>();
         }
     }
-
+    
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

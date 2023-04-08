@@ -1,7 +1,6 @@
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Domain.Entities;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +29,7 @@ public static class Delete
                 await _context.Animals
                     .Include(animal => animal.VisitedLocations)
                     .FirstOrDefaultAsync(animal => animal.Id == request.Id, cancellationToken)
-                ?? throw new NotFoundException(nameof(Animal), request.Id);
+                ?? throw new NotFoundException();
 
             if (animal.VisitedLocations.Any())
                 throw new ValidationException(nameof(request.Id), "The specified animal has moved away from its chipping location.");

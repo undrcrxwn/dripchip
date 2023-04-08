@@ -31,9 +31,11 @@ public static class Update
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var exists = await _context.LocationPoints.AnyAsync(locationPoint => locationPoint.Id == request.Id, cancellationToken);
+            var exists = await _context.LocationPoints.AnyAsync(x =>
+                x.Id == request.Id, cancellationToken: cancellationToken);
+
             if (!exists)
-                throw new NotFoundException(nameof(LocationPoint), request.Id);
+                throw new NotFoundException();
 
             var sameExists = await _context.LocationPoints.AnyAsync(x =>
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
