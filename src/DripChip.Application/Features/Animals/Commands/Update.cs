@@ -37,7 +37,7 @@ public static class Update
             RuleFor(x => x.ChippingLocationId).LocationPointId();
         }
     }
-    
+
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -55,10 +55,10 @@ public static class Update
 
             var chipperNotFound = await _context.Accounts
                 .AllAsync(account => account.Id != request.ChipperId, cancellationToken);
-            
+
             var chippingLocationNotFound = await _context.LocationPoints
                 .AllAsync(location => location.Id != request.ChippingLocationId, cancellationToken);
-            
+
             if (chipperNotFound || chippingLocationNotFound)
                 throw new NotFoundException();
 
@@ -84,7 +84,7 @@ public static class Update
             return modifiedAnimal.Adapt<Response>();
         }
     }
-    
+
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

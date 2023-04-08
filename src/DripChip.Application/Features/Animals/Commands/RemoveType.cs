@@ -12,7 +12,7 @@ namespace DripChip.Application.Features.Animals.Commands;
 public static class RemoveType
 {
     public sealed record Command(long AnimalId, long AnimalTypeId) : IRequest<Response>;
-    
+
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
@@ -21,7 +21,7 @@ public static class RemoveType
             RuleFor(x => x.AnimalTypeId).AnimalTypeId();
         }
     }
-    
+
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -39,21 +39,21 @@ public static class RemoveType
             var animalType =
                 await _context.AnimalTypes.FindAsync(request.AnimalTypeId)
                 ?? throw new NotFoundException();
-        
+
             if (!animal.AnimalTypes.Contains(animalType))
                 throw new NotFoundException();
 
             if (animal.AnimalTypes.Count == 1)
                 throw new ValidationException(nameof(request.AnimalTypeId),
                     "The specified animal type is the only type attached to the animal.");
-        
+
             animal.AnimalTypes.Remove(animalType);
 
             await _context.SaveChangesAsync(cancellationToken);
             return animal.Adapt<Response>();
         }
     }
-    
+
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

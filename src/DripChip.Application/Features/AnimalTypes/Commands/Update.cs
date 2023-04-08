@@ -30,18 +30,17 @@ public static class Update
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var exists = await _context.AnimalTypes.AnyAsync(x =>
-                x.Id == request.Id, cancellationToken: cancellationToken);
-
+            var exists = await _context.AnimalTypes
+                .AnyAsync(animalType => animalType.Id == request.Id, cancellationToken);
+            
             if (!exists)
-                throw new NotFoundException();
-        
-            var sameExists = await _context.AnimalTypes.AnyAsync(x =>
-                x.Type == request.Type, cancellationToken);
+                throw new NotFoundException(nameof(AnimalType), request.Id);
 
-            if (sameExists)
+            var sameTypeNameExists = await _context.AnimalTypes
+                .AnyAsync(animalType => animalType.Type == request.Type, cancellationToken);
+            
+            if (sameTypeNameExists)
                 throw new AlreadyExistsException();
-
 
             var entity = request.Adapt<AnimalType>();
             _context.AnimalTypes.Update(entity);

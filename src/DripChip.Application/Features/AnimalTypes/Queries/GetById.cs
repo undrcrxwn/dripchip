@@ -24,11 +24,10 @@ public static class GetById
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var entity = await _context.AnimalTypes.FindAsync(request.Id);
+            var entity =
+                await _context.AnimalTypes.FindAsync(request.Id)
+                ?? throw new NotFoundException();
 
-            if (entity is null)
-                throw new NotFoundException();
-        
             return entity.Adapt<Response>();
         }
     }

@@ -11,7 +11,7 @@ namespace DripChip.Application.Features.Animals.Commands;
 public static class ReplaceType
 {
     public sealed record Command(long Id, long OldTypeId, long NewTypeId) : IRequest<Response>;
-    
+
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
@@ -21,7 +21,7 @@ public static class ReplaceType
             RuleFor(x => x.NewTypeId).AnimalTypeId();
         }
     }
-    
+
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
@@ -43,10 +43,10 @@ public static class ReplaceType
             if (animal.AnimalTypes.Contains(newAnimalType))
                 throw new AlreadyExistsException();
 
-            var oldAnimalType = animal.AnimalTypes.SingleOrDefault(animalType => animalType.Id == request.OldTypeId);
-            if (oldAnimalType is null)
-                throw new NotFoundException();
-        
+            var oldAnimalType =
+                animal.AnimalTypes.SingleOrDefault(animalType => animalType.Id == request.OldTypeId)
+                ?? throw new NotFoundException();
+
             animal.AnimalTypes.Remove(oldAnimalType);
             animal.AnimalTypes.Add(newAnimalType);
 
@@ -54,7 +54,7 @@ public static class ReplaceType
             return animal.Adapt<Response>();
         }
     }
-    
+
     public sealed record Response(
         long Id,
         IEnumerable<long> AnimalTypes,

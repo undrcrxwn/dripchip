@@ -8,6 +8,7 @@ using DripChip.Domain.Entities;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Accounts.Commands;
@@ -48,7 +49,7 @@ public static class Create
         {
             if (_issuer.IsAuthenticated)
                 throw new ForbiddenException();
-            
+
             var sameExists = await _users.Users.AnyAsync(user =>
                 user.Email == request.Email, cancellationToken);
 
