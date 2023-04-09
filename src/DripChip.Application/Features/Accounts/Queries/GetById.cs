@@ -37,9 +37,9 @@ public static class GetById
                 await _context.Accounts.FindAsync(request.Id)
                 ?? throw new NotFoundException();
 
-            return new Response(user.Id, account.FirstName, account.LastName, user.Email!);
+            return new Response(user.Id, account.FirstName, account.LastName, user.Email!, user.Role);
         }
     }
 
-    public sealed record Response(int Id, string FirstName, string LastName, string Email);
+    public sealed record Response(int Id, string FirstName, string LastName, string Email, string Role);
 }

@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Models.Identity;
+using DripChip.Domain.Constants;
 using DripChip.Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 

@@ -1,4 +1,5 @@
 using DripChip.Application.Abstractions;
+using DripChip.Domain.Constants;
 using FluentValidation;
 
 namespace DripChip.Application.Extensions;
@@ -50,9 +51,16 @@ public static class ValidationExtensions
     public static IRuleBuilder<T, long> AnimalTypeId<T>(
         this IRuleBuilder<T, long> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
-    
 
     public static IRuleBuilder<T, long> AnimalLocationVisitId<T>(
         this IRuleBuilder<T, long> ruleBuilder) =>
         ruleBuilder.GreaterThan(0);
+
+    public static IRuleBuilder<T, string> Role<T>(
+        this IRuleBuilder<T, string> ruleBuilder) =>
+        ruleBuilder.Custom((property, context) =>
+        {
+            if (!Roles.Contain(property))
+                context.AddFailure(context.PropertyName, $"'{property}' is not a valid role.");
+        });
 }

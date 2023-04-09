@@ -65,10 +65,11 @@ public static class Search
                     userAccount.User.Id,
                     userAccount.Account.FirstName,
                     userAccount.Account.LastName,
-                    userAccount.User.Email!))
+                    userAccount.User.Email!,
+                    userAccount.User.Role))
                 .ToListAsync(cancellationToken);
         }
     }
 
-    public sealed record Response(int Id, string FirstName, string LastName, string Email);
+    public sealed record Response(int Id, string FirstName, string LastName, string Email, string Role);
 }

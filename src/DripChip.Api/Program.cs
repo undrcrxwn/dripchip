@@ -6,9 +6,9 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddApplicationServices()
+    .AddApiServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
-    .AddApiServices(builder.Configuration);
+    .AddApplicationServices();
 
 builder.Host.UseSerilog();
 

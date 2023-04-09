@@ -67,9 +67,10 @@ public static class Update
                 user.Id,
                 account.FirstName,
                 account.LastName,
-                user.Email!);
+                user.Email!,
+                user.Role);
         }
     }
 
-    public sealed record Response(int Id, string FirstName, string LastName, string Email);
+    public sealed record Response(int Id, string FirstName, string LastName, string Email, string Role);
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using DripChip.Domain.Constants;
 
 #pragma warning disable CS8618
 namespace DripChip.Domain.Entities;
