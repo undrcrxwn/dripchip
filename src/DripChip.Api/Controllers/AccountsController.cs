@@ -14,7 +14,7 @@ public sealed class AccountsController : ApiControllerBase
     [ProducesResponseType(Status403Forbidden)]
     [ProducesResponseType(Status409Conflict)]
     [HttpPost, ApiRoute("~/registration")]
-    public async Task<ActionResult<Create.Response>> Register([FromBody] Create.Command command)
+    public async Task<ActionResult<Register.Response>> Register([FromBody] Register.Command command)
     {
         var response = await Mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);
