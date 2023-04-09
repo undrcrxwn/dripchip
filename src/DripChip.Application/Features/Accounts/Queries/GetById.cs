@@ -33,7 +33,7 @@ public static class GetById
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var issuer = await _users.FindByIdAsync(_issuer.AccountId!.Value);
+            var issuer = await _issuer.GetUserAsync();
             if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
 

@@ -3,6 +3,7 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Constants;
 using FluentValidation;
 using Mediator;
 
@@ -44,7 +45,8 @@ public static class Update
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (request.Id != _issuer.AccountId)
+            var issuer = await _issuer.GetUserAsync();
+            if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
 
             var user =

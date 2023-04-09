@@ -25,9 +25,12 @@ public sealed class AccountsController : ApiControllerBase
     public async Task<IEnumerable<Search.Response>> Search([FromQuery] Search.Query query) =>
         await Mediator.Send(query);
 
-    [HttpPost("[action]")]
-    public async Task<Create.Response> Create([FromBody] Create.Command command) =>
-        await Mediator.Send(command);
+    [HttpPost]
+    public async Task<ActionResult<Create.Response>> Create([FromBody] Create.Command command)
+    {
+        var response = await Mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);
+    }
 
     [HttpPut("{accountId}")]
     public async Task<Update.Response> Update([FromRoute] int accountId, [FromBody] Update.Command command) =>

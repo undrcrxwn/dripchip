@@ -17,7 +17,7 @@ namespace DripChip.Application.Features.Accounts.Commands;
 public static class Create
 {
     public sealed record Command(
-        int Id,
+        int? Id,
         string FirstName,
         string LastName,
         string Email,
@@ -28,7 +28,7 @@ public static class Create
     {
         public Validator(IPasswordValidator<Command> passwordValidator)
         {
-            RuleFor(x => x.Id).AccountId();
+            When(x => x.Id is not null, () => RuleFor(x => x.Id!.Value).AccountId());
             RuleFor(x => x.Email).EmailAddress().NotEmpty();
             RuleFor(x => x.Password).Apply(passwordValidator).NotEmpty();
             RuleFor(x => x.FirstName).NotEmpty();
@@ -66,13 +66,14 @@ public static class Create
             var userCreationResult = await _users.CreateAsync(request.Email, request.Password, request.Role);
             if (userCreationResult is UserCreationResult.Failure failure)
                 throw new ValidationException(nameof(request.Password), failure.Reasons);
-            
+
             if (userCreationResult is not UserCreationResult.Success success)
                 throw new InvalidOperationException();
 
             // Account creation
             var account = request.Adapt<Account>();
-            account.Id = request.Id;
+            if (request.Id is not null)
+                account.Id = request.Id.Value;
             await _context.Accounts.AddAsync(account, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
