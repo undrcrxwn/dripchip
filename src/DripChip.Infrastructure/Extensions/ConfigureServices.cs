@@ -18,7 +18,6 @@ public static class ConfigureServices
     {
         services
             .AddHostedService<DataStoreInitializer>()
-            .AddHostedService<DefaultUsersInitializer>()
             .AddSingleton<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<IUserRepository, UserRepository>()

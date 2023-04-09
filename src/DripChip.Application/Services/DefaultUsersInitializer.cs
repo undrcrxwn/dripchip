@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace DripChip.Infrastructure.Persistence.Services;
+namespace DripChip.Application.Services;
 
 public class DefaultUsersInitializer : IHostedService
 {

@@ -1,5 +1,6 @@
 using System.Reflection;
 using DripChip.Application.Behaviors;
+using DripChip.Application.Services;
 using FluentValidation;
 using Mapster;
 using Mediator;
@@ -19,6 +20,7 @@ public static class ConfigureServices
             .AddValidatorsFromAssembly(assembly)
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+            .AddHostedService<DefaultUsersInitializer>()
             .AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
     }
 }
