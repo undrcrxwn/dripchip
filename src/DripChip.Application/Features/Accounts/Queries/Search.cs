@@ -1,7 +1,10 @@
+using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Abstractions.Specifications;
+using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Constants;
 using FluentValidation;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +31,14 @@ public static class Search
 
     internal sealed class Handler : IRequestHandler<Query, IEnumerable<Response>>
     {
+        private readonly ICurrentUserProvider _issuer;
         private readonly IApplicationDbContext _context;
         private readonly IUserRepository _users;
         private readonly ISpecificationFactory _specifications;
 
-        public Handler(IApplicationDbContext context, IUserRepository users, ISpecificationFactory specifications)
+        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, IUserRepository users, ISpecificationFactory specifications)
         {
+            _issuer = issuer;
             _context = context;
             _users = users;
             _specifications = specifications;
@@ -41,6 +46,10 @@ public static class Search
 
         public async ValueTask<IEnumerable<Response>> Handle(Query request, CancellationToken cancellationToken)
         {
+            var issuer = await _users.FindByIdAsync(_issuer.AccountId!.Value);
+            if (issuer!.Role != Roles.Admin)
+                throw new ForbiddenException();
+
             // Filtering
             var emailFilter = _specifications.CaseInsensitiveContains(request.Email);
             var firstNameFilter = _specifications.CaseInsensitiveContains(request.FirstName);

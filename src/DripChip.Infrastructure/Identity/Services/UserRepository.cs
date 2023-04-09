@@ -22,17 +22,18 @@ public class UserRepository : IUserRepository
     public async Task<IUser?> FindByEmailAsync(string email) =>
         await _userManager.FindByEmailAsync(email);
 
-    public async Task<UserCreationResult> CreateAsync(string email, string password)
+    public async Task<UserCreationResult> CreateAsync(string email, string password, string role)
     {
         var user = new User
         {
             Email = email,
-            UserName = email
+            UserName = email,
+            Role = role
         };
 
         var result = await _userManager.CreateAsync(user, password);
         return result.Succeeded
-            ? new UserCreationResult.Success()
+            ? new UserCreationResult.Success(user)
             : new UserCreationResult.Failure(result.Errors.Select(error => error.Description));
     }
 

@@ -60,7 +60,7 @@ public static class Register
                 throw new AlreadyExistsException("User with the specified email already exists.");
 
             // User creation
-            var userCreationResult = await _users.CreateAsync(request.Email, request.Password);
+            var userCreationResult = await _users.CreateAsync(request.Email, request.Password, Roles.User);
             if (userCreationResult is UserCreationResult.Failure failure)
                 throw new ValidationException(nameof(request.Password), failure.Reasons);
 

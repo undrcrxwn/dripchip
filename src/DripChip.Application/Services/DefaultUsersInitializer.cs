@@ -1,3 +1,4 @@
+using DripChip.Application.Abstractions;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Commands;
 using Mediator;
@@ -24,7 +25,10 @@ public class DefaultUsersInitializer : IHostedService
         using var scope = _scopeFactory.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<DefaultUsersInitializer>>();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var issuer = scope.ServiceProvider.GetRequiredService<ICurrentUserProvider>();
 
+        issuer.BypassAuthentication = true;
+        
         var commands = _configuration.GetSection("DefaultUsers").Get<IEnumerable<Create.Command>>()!;
         foreach (var command in commands)
         {

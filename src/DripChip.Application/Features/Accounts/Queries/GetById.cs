@@ -1,7 +1,9 @@
+using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
+using DripChip.Domain.Constants;
 using FluentValidation;
 using Mediator;
 
@@ -18,21 +20,27 @@ public static class GetById
 
     internal sealed class Handler : IRequestHandler<Query, Response>
     {
+        private readonly ICurrentUserProvider _issuer;
         private readonly IApplicationDbContext _context;
         private readonly IUserRepository _users;
 
-        public Handler(IApplicationDbContext context, IUserRepository users)
+        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, IUserRepository users)
         {
+            _issuer = issuer;
             _context = context;
             _users = users;
         }
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
+            var issuer = await _users.FindByIdAsync(_issuer.AccountId!.Value);
+            if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
+                throw new ForbiddenException();
+
             var user =
                 await _users.FindByIdAsync(request.Id)
                 ?? throw new NotFoundException();
-        
+
             var account =
                 await _context.Accounts.FindAsync(request.Id)
                 ?? throw new NotFoundException();

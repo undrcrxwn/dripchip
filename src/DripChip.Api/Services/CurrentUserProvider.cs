@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using DripChip.Application.Abstractions;
+using DripChip.Application.Abstractions.Identity;
+using DripChip.Application.Abstractions.Persistence;
 
 namespace DripChip.Api.Services;
 
@@ -9,9 +11,13 @@ namespace DripChip.Api.Services;
 internal class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserRepository _users;
 
-    public CurrentUserProvider(IHttpContextAccessor httpContextAccessor) =>
+    public CurrentUserProvider(IHttpContextAccessor httpContextAccessor, IUserRepository users)
+    {
         _httpContextAccessor = httpContextAccessor;
+        _users = users;
+    }
 
     public int? AccountId
     {
@@ -25,5 +31,11 @@ internal class CurrentUserProvider : ICurrentUserProvider
         }
     }
 
+    public bool BypassAuthentication { get; set; }
+
     public bool IsAuthenticated => AccountId is not null;
+
+    public async Task<IUser?> GetUserAsync() => AccountId is { } id
+        ? await _users.FindByIdAsync(id)
+        : null;
 }

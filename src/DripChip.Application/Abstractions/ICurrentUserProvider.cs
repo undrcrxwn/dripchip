@@ -1,3 +1,5 @@
+using DripChip.Application.Abstractions.Identity;
+
 namespace DripChip.Application.Abstractions;
 
 /// <summary>
@@ -5,6 +7,8 @@ namespace DripChip.Application.Abstractions;
 /// </summary>
 public interface ICurrentUserProvider
 {
+    public bool BypassAuthentication { get; set; }
     public bool IsAuthenticated { get; }
     public int? AccountId { get; }
+    public Task<IUser?> GetUserAsync();
 }

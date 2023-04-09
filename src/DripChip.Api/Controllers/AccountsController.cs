@@ -7,9 +7,10 @@ using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace DripChip.Api.Controllers;
 
+[Authorize]
 public sealed class AccountsController : ApiControllerBase
 {
-    [HttpPost, ApiRoute("~/registration")]
+    [HttpPost, ApiRoute("~/registration"), AllowAnonymous]
     public async Task<ActionResult<Register.Response>> Register([FromBody] Register.Command command)
     {
         var response = await Mediator.Send(command);
@@ -24,11 +25,15 @@ public sealed class AccountsController : ApiControllerBase
     public async Task<IEnumerable<Search.Response>> Search([FromQuery] Search.Query query) =>
         await Mediator.Send(query);
 
-    [HttpPut("{accountId}"), Authorize]
+    [HttpPost("[action]")]
+    public async Task<Create.Response> Create([FromBody] Create.Command command) =>
+        await Mediator.Send(command);
+
+    [HttpPut("{accountId}")]
     public async Task<Update.Response> Update([FromRoute] int accountId, [FromBody] Update.Command command) =>
         await Mediator.Send(command with { Id = accountId });
 
-    [HttpDelete("{accountId}"), Authorize]
+    [HttpDelete("{accountId}")]
     public async Task Delete([FromRoute] int accountId)
     {
         await Mediator.Send(new Delete.Command(accountId));
