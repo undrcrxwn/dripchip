@@ -6,7 +6,7 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=animal-chipization
+      - POSTGRES_DB=animal-chipization1
       - POSTGRES_USER=dripchip
       - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
   
@@ -21,7 +21,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - POSTGRES_HOST=database
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=animal-chipization
+      - POSTGRES_DB=animal-chipization1
       - POSTGRES_USER=dripchip
       - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
   

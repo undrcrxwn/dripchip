@@ -63,7 +63,7 @@ public static class Create
                 throw new AlreadyExistsException("User with the specified identity already exists.");
 
             // User creation
-            var userCreationResult = await _users.CreateAsync(request.Email, request.Password, request.Role);
+            var userCreationResult = await _users.CreateAsync(request.Email, request.Password, request.Role, request.Id);
             if (userCreationResult is UserCreationResult.Failure failure)
                 throw new ValidationException(nameof(request.Password), failure.Reasons);
 

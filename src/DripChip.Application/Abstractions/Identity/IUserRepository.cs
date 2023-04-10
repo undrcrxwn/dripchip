@@ -13,7 +13,7 @@ public interface IUserRepository
     public Task<IUser?> FindByEmailAsync(string email);
 
     /// <returns>Error descriptions if failed, otherwise null.</returns>
-    public Task<UserCreationResult> CreateAsync(string email, string password, string role);
+    public Task<UserCreationResult> CreateAsync(string email, string password, string role, int? id);
 
     public Task DeleteAsync(int userId);
     public Task DeleteAsync(IUser user);

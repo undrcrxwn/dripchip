@@ -18,6 +18,7 @@ internal class DataStoreInitializer : IHostedService
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureDeletedAsync(cancellationToken);
         await context.Database.MigrateAsync(cancellationToken);
     }
 
