@@ -1,14 +1,15 @@
 using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Application.Models.Identity;
 using DripChip.Domain.Constants;
 using DripChip.Domain.Entities;
+using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
@@ -26,7 +27,7 @@ public static class Create
 
     public sealed class Validator : AbstractValidator<Command>
     {
-        public Validator(IPasswordValidator<Command> passwordValidator)
+        public Validator(Abstractions.Identity.IPasswordValidator<Command> passwordValidator)
         {
             When(x => x.Id is not null, () => RuleFor(x => x.Id!.Value).AccountId());
             RuleFor(x => x.Email).EmailAddress().NotEmpty();
@@ -41,9 +42,9 @@ public static class Create
     {
         private readonly ICurrentUserProvider _issuer;
         private readonly IApplicationDbContext _context;
-        private readonly IUserRepository _users;
+        private readonly UserManager<Account> _users;
 
-        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, IUserRepository users)
+        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, UserManager<Account> users)
         {
             _issuer = issuer;
             _context = context;
@@ -52,32 +53,21 @@ public static class Create
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var issuer = await _issuer.GetUserAsync();
+            var issuer = await _issuer.GetAccountAsync();
             if (issuer?.Role != Roles.Admin && !_issuer.BypassAuthentication)
                 throw new ForbiddenException();
 
-            var sameExists = await _users.Users.AnyAsync(user =>
+            var sameExists = await _context.Accounts.AnyAsync(user =>
                 user.Id == request.Id || user.Email == request.Email, cancellationToken);
 
             if (sameExists)
                 throw new AlreadyExistsException("User with the specified identity already exists.");
 
-            // User creation
-            var userCreationResult = await _users.CreateAsync(request.Email, request.Password, request.Role, request.Id);
-            if (userCreationResult is UserCreationResult.Failure failure)
-                throw new ValidationException(nameof(request.Password), failure.Reasons);
-
-            if (userCreationResult is not UserCreationResult.Success success)
-                throw new InvalidOperationException();
-
-            // Account creation
             var account = request.Adapt<Account>();
-            if (request.Id is not null)
-                account.Id = request.Id.Value;
-            await _context.Accounts.AddAsync(account, cancellationToken);
+            account.UserName = request.Email;
+            await _users.CreateAsync(account, request.Password);
 
-            await _context.SaveChangesAsync(cancellationToken);
-            return new Response(success.User.Id, account.FirstName, account.LastName, success.User.Email!, success.User.Role);
+            return account.Adapt<Response>();
         }
     }
 

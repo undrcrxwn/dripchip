@@ -1,4 +1,4 @@
-using DripChip.Application.Abstractions.Identity;
+using DripChip.Domain.Entities;
 
 namespace DripChip.Application.Abstractions;
 
@@ -10,5 +10,5 @@ public interface ICurrentUserProvider
     public bool BypassAuthentication { get; set; }
     public bool IsAuthenticated { get; }
     public int? AccountId { get; }
-    public Task<IUser?> GetUserAsync();
+    public Task<Account?> GetAccountAsync();
 }

@@ -1,10 +1,13 @@
+using DripChip.Domain.Abstractions;
 using DripChip.Domain.Enumerations;
 #pragma warning disable CS8618
 
 namespace DripChip.Domain.Entities;
 
-public class Animal : EntityBase<long>
+public class Animal : IEntity<long>
 {
+    public long Id { get; set; }
+    
     public IList<AnimalType> AnimalTypes { get; set; } = new List<AnimalType>();
 
     public float Weight { get; set; }

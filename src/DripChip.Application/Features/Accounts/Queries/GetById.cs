@@ -5,6 +5,7 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Constants;
 using FluentValidation;
+using Mapster;
 using Mediator;
 
 namespace DripChip.Application.Features.Accounts.Queries;
@@ -22,30 +23,24 @@ public static class GetById
     {
         private readonly ICurrentUserProvider _issuer;
         private readonly IApplicationDbContext _context;
-        private readonly IUserRepository _users;
 
-        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, IUserRepository users)
+        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context)
         {
             _issuer = issuer;
             _context = context;
-            _users = users;
         }
 
         public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
         {
-            var issuer = await _issuer.GetUserAsync();
+            var issuer = await _issuer.GetAccountAsync();
             if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
-
-            var user =
-                await _users.FindByIdAsync(request.Id)
-                ?? throw new NotFoundException();
 
             var account =
                 await _context.Accounts.FindAsync(request.Id)
                 ?? throw new NotFoundException();
 
-            return new Response(user.Id, account.FirstName, account.LastName, user.Email!, user.Role);
+            return account.Adapt<Response>();
         }
     }
 

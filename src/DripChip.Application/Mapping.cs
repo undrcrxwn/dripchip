@@ -1,3 +1,4 @@
+using DripChip.Domain.Abstractions;
 using DripChip.Domain.Entities;
 using Mapster;
 
@@ -8,7 +9,7 @@ public sealed class Mapping : IRegister
     public void Register(TypeAdapterConfig config)
     {
         // Entity to ID
-        config.NewConfig<EntityBase<long>, long>()
+        config.NewConfig<IEntity<long>, long>()
             .MapWith(entity => entity.Id);
 
         // Enumeration to name

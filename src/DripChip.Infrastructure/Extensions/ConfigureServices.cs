@@ -1,6 +1,7 @@
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Abstractions.Specifications;
+using DripChip.Domain.Entities;
 using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;
@@ -20,8 +21,7 @@ public static class ConfigureServices
             .AddHostedService<DataStoreInitializer>()
             .AddSingleton<ISpecificationFactory, SpecificationFactory>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
-            .AddScoped<IUserRepository, UserRepository>()
-            .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Identity.Services.PasswordValidator<>));
+            .AddTransient(typeof(Application.Abstractions.Identity.IPasswordValidator<>), typeof(Application.Services.PasswordValidator<>));
 
         var host = configuration["POSTGRES_HOST"];
         var port = configuration["POSTGRES_PORT"];
@@ -33,7 +33,7 @@ public static class ConfigureServices
             options.UseNpgsql($"Host={host};Port={port};Database={database};Username={username};Password={password}"));
 
         services
-            .AddIdentity<User, IdentityRole<int>>()
+            .AddIdentity<Account, IdentityRole<int>>()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 

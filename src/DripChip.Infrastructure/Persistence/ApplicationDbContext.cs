@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 namespace DripChip.Infrastructure.Persistence;
 
 public sealed class ApplicationDbContext :
-    IdentityDbContext<User, IdentityRole<int>, int>,
+    IdentityDbContext<Account, IdentityRole<int>, int>,
     IApplicationDbContext
 {
-    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<Account> Accounts => Users;
     public DbSet<LocationPoint> LocationPoints => Set<LocationPoint>();
     public DbSet<AnimalType> AnimalTypes => Set<AnimalType>();
     public DbSet<Animal> Animals => Set<Animal>();
@@ -21,6 +21,8 @@ public sealed class ApplicationDbContext :
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<Account>().Property(entity => entity.Id).ValueGeneratedOnAdd();
+
         // Relationships
         builder.Entity<Animal>()
             .HasMany(x => x.AnimalTypes)

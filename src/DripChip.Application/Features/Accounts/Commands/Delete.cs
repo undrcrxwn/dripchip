@@ -23,19 +23,17 @@ public static class Delete
     internal sealed class Handler : IRequestHandler<Command>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IUserRepository _users;
         private readonly ICurrentUserProvider _issuer;
 
-        public Handler(IApplicationDbContext context, IUserRepository users, ICurrentUserProvider issuer)
+        public Handler(IApplicationDbContext context, ICurrentUserProvider issuer)
         {
             _context = context;
-            _users = users;
             _issuer = issuer;
         }
 
         public async ValueTask<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var issuer = await _issuer.GetUserAsync();
+            var issuer = await _issuer.GetAccountAsync();
             if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
 
@@ -50,7 +48,6 @@ public static class Delete
 
             _context.Accounts.Remove(account);
             await _context.SaveChangesAsync(cancellationToken);
-            await _users.DeleteAsync(request.Id);
 
             return Unit.Value;
         }

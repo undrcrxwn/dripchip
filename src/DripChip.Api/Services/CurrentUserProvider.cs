@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
+using DripChip.Domain.Entities;
 
 namespace DripChip.Api.Services;
 
@@ -11,12 +11,12 @@ namespace DripChip.Api.Services;
 internal class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserRepository _users;
+    private readonly IApplicationDbContext _context;
 
-    public CurrentUserProvider(IHttpContextAccessor httpContextAccessor, IUserRepository users)
+    public CurrentUserProvider(IHttpContextAccessor httpContextAccessor, IApplicationDbContext context)
     {
         _httpContextAccessor = httpContextAccessor;
-        _users = users;
+        _context = context;
     }
 
     public int? AccountId
@@ -35,7 +35,7 @@ internal class CurrentUserProvider : ICurrentUserProvider
 
     public bool IsAuthenticated => AccountId is not null;
 
-    public async Task<IUser?> GetUserAsync() => AccountId is { } id
-        ? await _users.FindByIdAsync(id)
+    public async Task<Account?> GetAccountAsync() => AccountId is not null
+        ? await _context.Accounts.FindAsync(AccountId)
         : null;
 }

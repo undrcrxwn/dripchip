@@ -19,7 +19,7 @@ public static class ConfigureServices
             .ConfigureSwagger(configuration)
             .AddEndpointsApiExplorer()
             .AddHealthChecks();
-        
+
         // Logging (Serilog)
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
@@ -34,14 +34,15 @@ public static class ConfigureServices
             options.Filters.Add<ApiExceptionFilterAttribute>();
             options.Filters.Add<ApiAuthorizationFilter>();
         });
-        
+
         // Versioning
-        services.AddApiVersioning(options => {
+        services.AddApiVersioning(options =>
+        {
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
         });
-        
+
         services.AddVersionedApiExplorer(setup =>
         {
             setup.GroupNameFormat = "'v'VVV";

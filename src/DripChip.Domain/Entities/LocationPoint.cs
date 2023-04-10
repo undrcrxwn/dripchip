@@ -1,7 +1,11 @@
+using DripChip.Domain.Abstractions;
+
 namespace DripChip.Domain.Entities;
 
-public class LocationPoint : EntityBase<long>
+public class LocationPoint : IEntity<long>
 {
+    public long Id { get; set; }
+    
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 

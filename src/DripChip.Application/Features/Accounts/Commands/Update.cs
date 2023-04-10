@@ -1,11 +1,14 @@
 using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Constants;
+using DripChip.Domain.Entities;
+using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
+using Mapster;
 using Mediator;
+using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Application.Features.Accounts.Commands;
 
@@ -20,7 +23,7 @@ public static class Update
 
     public sealed class Validator : AbstractValidator<Command>
     {
-        public Validator(IPasswordValidator<Command> passwordValidator)
+        public Validator(Abstractions.Identity.IPasswordValidator<Command> passwordValidator)
         {
             RuleFor(x => x.Id).AccountId();
             RuleFor(x => x.FirstName).NotEmpty();
@@ -33,25 +36,21 @@ public static class Update
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IUserRepository _users;
         private readonly ICurrentUserProvider _issuer;
+        private readonly UserManager<Account> _users;
 
-        public Handler(IApplicationDbContext context, IUserRepository users, ICurrentUserProvider issuer)
+        public Handler(IApplicationDbContext context, ICurrentUserProvider issuer, UserManager<Account> users)
         {
             _context = context;
-            _users = users;
             _issuer = issuer;
+            _users = users;
         }
 
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var issuer = await _issuer.GetUserAsync();
+            var issuer = await _issuer.GetAccountAsync();
             if (issuer?.Id != request.Id && issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
-
-            var user =
-                await _users.FindByIdAsync(request.Id)
-                ?? throw new NotFoundException();
 
             var account =
                 await _context.Accounts.FindAsync(request.Id)
@@ -60,17 +59,12 @@ public static class Update
             account.FirstName = request.FirstName;
             account.LastName = request.LastName;
 
-            await _users.SetEmailAsync(user, request.Email);
-            await _users.SetUsernameAsync(user, request.Email);
-            await _users.SetPasswordAsync(user, request.Password);
+            await _users.SetEmailAsync(account, request.Email);
+            await _users.SetUserNameAsync(account, request.Email);
+            await _users.SetPasswordAsync(account, request.Password);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new Response(
-                user.Id,
-                account.FirstName,
-                account.LastName,
-                user.Email!,
-                user.Role);
+            return account.Adapt<Response>();
         }
     }
 

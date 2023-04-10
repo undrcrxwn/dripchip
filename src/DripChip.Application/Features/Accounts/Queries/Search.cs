@@ -6,6 +6,7 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Constants;
 using FluentValidation;
+using Mapster;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,20 +34,18 @@ public static class Search
     {
         private readonly ICurrentUserProvider _issuer;
         private readonly IApplicationDbContext _context;
-        private readonly IUserRepository _users;
         private readonly ISpecificationFactory _specifications;
 
-        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, IUserRepository users, ISpecificationFactory specifications)
+        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, ISpecificationFactory specifications)
         {
             _issuer = issuer;
             _context = context;
-            _users = users;
             _specifications = specifications;
         }
 
         public async ValueTask<IEnumerable<Response>> Handle(Query request, CancellationToken cancellationToken)
         {
-            var issuer = await _users.FindByIdAsync(_issuer.AccountId!.Value);
+            var issuer = await _issuer.GetAccountAsync();
             if (issuer!.Role != Roles.Admin)
                 throw new ForbiddenException();
 
@@ -55,28 +54,16 @@ public static class Search
             var firstNameFilter = _specifications.CaseInsensitiveContains(request.FirstName);
             var lastNameFilter = _specifications.CaseInsensitiveContains(request.LastName);
 
-            var userAccounts =
-                from user in _users.Users.Where(x => x.Email!, emailFilter)
-                join account in _context.Accounts
-                        .Where(x => x.FirstName, firstNameFilter)
-                        .Where(x => x.LastName, lastNameFilter)
-                    on user.Id equals account.Id
-                select new { User = user, Account = account };
-
-            // Pagination
-            userAccounts = userAccounts
-                .OrderBy(x => x.User.Id)
+            var accounts = _context.Accounts
+                .Where(account => account.Email!, emailFilter)
+                .Where(account => account.FirstName, firstNameFilter)
+                .Where(account => account.LastName, lastNameFilter)
+                // Pagination
+                .OrderBy(account => account.Id)
                 .Skip(request.From)
                 .Take(request.Size);
 
-            return await userAccounts
-                .Select(userAccount => new Response(
-                    userAccount.User.Id,
-                    userAccount.Account.FirstName,
-                    userAccount.Account.LastName,
-                    userAccount.User.Email!,
-                    userAccount.User.Role))
-                .ToListAsync(cancellationToken);
+            return await accounts.ProjectToType<Response>().ToListAsync(cancellationToken);
         }
     }
 

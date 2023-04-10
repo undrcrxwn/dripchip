@@ -1,18 +1,19 @@
+using DripChip.Domain.Entities;
 using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
-namespace DripChip.Infrastructure.Identity.Services;
+namespace DripChip.Application.Services;
 
 /// <summary>
 /// Tells if a string is a valid user password that satisfies ASP.NET Core Identity requirements.
 /// </summary>
 public class PasswordValidator<T> : Application.Abstractions.Identity.IPasswordValidator<T>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Account> _userManager;
 
-    public PasswordValidator(UserManager<User> userManager) =>
+    public PasswordValidator(UserManager<Account> userManager) =>
         _userManager = userManager;
 
     public async Task ValidateAsync(ValidationContext<T> context, string value)

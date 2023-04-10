@@ -1,14 +1,15 @@
 using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Models.Identity;
+using DripChip.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace DripChip.Infrastructure.Identity.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<Account> _userManager;
 
-    public AuthenticationService(UserManager<User> userManager) =>
+    public AuthenticationService(UserManager<Account> userManager) =>
         _userManager = userManager;
     
     public async Task<AuthenticationResult> AuthenticateAsync(string username, string password)
