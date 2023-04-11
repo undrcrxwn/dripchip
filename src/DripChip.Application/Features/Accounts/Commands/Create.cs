@@ -18,18 +18,18 @@ namespace DripChip.Application.Features.Accounts.Commands;
 public static class Create
 {
     public sealed record Command(
-        int? Id,
         string FirstName,
         string LastName,
         string Email,
         string Password,
-        string Role) : IRequest<Response>;
+        string Role,
+        int? Id = default) : IRequest<Response>;
 
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator(Abstractions.Identity.IPasswordValidator<Command> passwordValidator)
         {
-            When(x => x.Id is not null, () => RuleFor(x => x.Id!.Value).AccountId());
+            When(x => x.Id.HasValue, () => RuleFor(x => x.Id!.Value).AccountId());
             RuleFor(x => x.Email).EmailAddress().NotEmpty();
             RuleFor(x => x.Password).Apply(passwordValidator).NotEmpty();
             RuleFor(x => x.FirstName).NotEmpty();
@@ -41,13 +41,11 @@ public static class Create
     internal sealed class Handler : IRequestHandler<Command, Response>
     {
         private readonly ICurrentUserProvider _issuer;
-        private readonly IApplicationDbContext _context;
         private readonly UserManager<Account> _users;
 
-        public Handler(ICurrentUserProvider issuer, IApplicationDbContext context, UserManager<Account> users)
+        public Handler(ICurrentUserProvider issuer, UserManager<Account> users)
         {
             _issuer = issuer;
-            _context = context;
             _users = users;
         }
 
@@ -57,11 +55,15 @@ public static class Create
             if (issuer?.Role != Roles.Admin && !_issuer.BypassAuthentication)
                 throw new ForbiddenException();
 
-            var sameExists = await _context.Accounts.AnyAsync(user =>
-                user.Id == request.Id || user.Email == request.Email, cancellationToken);
+            if (request.Id is { } accountId)
+            {
+                var sameExists =
+                    (await _users.FindByIdAsync(accountId.ToString()) ?? await _users.FindByEmailAsync(request.Email))
+                    is not null;
 
-            if (sameExists)
-                throw new AlreadyExistsException("User with the specified identity already exists.");
+                if (sameExists)
+                    throw new AlreadyExistsException();
+            }
 
             var account = request.Adapt<Account>();
             account.UserName = request.Email;

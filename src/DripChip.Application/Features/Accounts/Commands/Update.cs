@@ -19,7 +19,8 @@ public static class Update
         string FirstName,
         string LastName,
         string Email,
-        string Password) : IRequest<Response>;
+        string Password,
+        string Role) : IRequest<Response>;
 
     public sealed class Validator : AbstractValidator<Command>
     {
@@ -30,6 +31,7 @@ public static class Update
             RuleFor(x => x.LastName).NotEmpty();
             RuleFor(x => x.Email).EmailAddress().NotEmpty();
             RuleFor(x => x.Password).Apply(passwordValidator).NotEmpty();
+            RuleFor(x => x.Role).NotEmpty();
         }
     }
 
@@ -58,6 +60,7 @@ public static class Update
 
             account.FirstName = request.FirstName;
             account.LastName = request.LastName;
+            account.Role = request.Role;
 
             await _users.SetEmailAsync(account, request.Email);
             await _users.SetUserNameAsync(account, request.Email);

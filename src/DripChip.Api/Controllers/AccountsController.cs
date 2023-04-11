@@ -17,7 +17,7 @@ public sealed class AccountsController : ApiControllerBase
         return CreatedAtAction(nameof(GetById), new { AccountId = response.Id }, response);
     }
 
-    [HttpGet("{accountId}")]
+    [HttpGet("{accountId}"), AllowAnonymous]
     public async Task<GetById.Response> GetById([FromRoute] int accountId) =>
         await Mediator.Send(new GetById.Query(accountId));
 

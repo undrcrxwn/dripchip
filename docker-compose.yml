@@ -6,7 +6,7 @@ services:
     volumes:
       - /var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=animal-chipization1
+      - POSTGRES_DB=animal-chipization
       - POSTGRES_USER=dripchip
       - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
   
@@ -21,12 +21,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - POSTGRES_HOST=database
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=animal-chipization1
+      - POSTGRES_DB=animal-chipization
       - POSTGRES_USER=dripchip
       - POSTGRES_PASSWORD=FvXVPa5Nt9rkU7dZ
   
   tests:
-    image: mrexpen/planet_olymp_phase1
+    image: mrexpen/planet_olymp_phase2
     pull_policy: always
     ports:
       - "8090:8080"

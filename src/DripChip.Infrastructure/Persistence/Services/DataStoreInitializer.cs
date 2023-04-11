@@ -1,3 +1,4 @@
+using DripChip.Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,6 +19,7 @@ internal class DataStoreInitializer : IHostedService
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        
         await context.Database.EnsureDeletedAsync(cancellationToken);
         await context.Database.MigrateAsync(cancellationToken);
     }

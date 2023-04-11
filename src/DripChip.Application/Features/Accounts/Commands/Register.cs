@@ -2,16 +2,13 @@ using DripChip.Application.Abstractions;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Application.Models.Identity;
 using DripChip.Domain.Constants;
 using DripChip.Domain.Entities;
-using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Accounts.Commands;
 
@@ -54,7 +51,10 @@ public static class Register
             if (_issuer.IsAuthenticated)
                 throw new ForbiddenException();
 
-            var sameExists = await _context.Accounts.AnyAsync(account => account.Email == request.Email, cancellationToken);
+            var sameExists = await _context.Accounts.AnyAsync(
+                account => account.NormalizedEmail == _users.NormalizeEmail(request.Email),
+                cancellationToken);
+
             if (sameExists)
                 throw new AlreadyExistsException("User with the specified email already exists.");
 

@@ -21,7 +21,7 @@ public sealed class ApplicationDbContext :
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Account>().Property(entity => entity.Id).ValueGeneratedOnAdd();
+        builder.Entity<Account>().Property(entity => entity.Id).UseIdentityColumn();
 
         // Relationships
         builder.Entity<Animal>()

@@ -1,5 +1,6 @@
 using DripChip.Api.Extensions;
 using DripChip.Application.Extensions;
+using DripChip.Application.Services;
 using DripChip.Infrastructure.Extensions;
 using Serilog;
 
@@ -8,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddApiServices(builder.Configuration)
     .AddInfrastructureServices(builder.Configuration)
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddScoped<DefaultUsersInitializer>();
 
 builder.Host.UseSerilog();
 
