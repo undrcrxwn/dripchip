@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DripChip.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230412173231_Initial")]
+    [Migration("20230414113534_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -178,6 +178,42 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AnimalTypes");
+                });
+
+            modelBuilder.Entity("DripChip.Domain.Entities.Area", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Areas");
+                });
+
+            modelBuilder.Entity("DripChip.Domain.Entities.AreaPoint", b =>
+                {
+                    b.Property<long>("AreaId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SequenceId")
+                        .HasColumnType("integer");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("AreaId", "SequenceId");
+
+                    b.ToTable("AreaPoints");
                 });
 
             modelBuilder.Entity("DripChip.Domain.Entities.LocationPoint", b =>
@@ -391,6 +427,17 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                     b.Navigation("ChippingLocation");
                 });
 
+            modelBuilder.Entity("DripChip.Domain.Entities.AreaPoint", b =>
+                {
+                    b.HasOne("DripChip.Domain.Entities.Area", "Area")
+                        .WithMany("AreaPoints")
+                        .HasForeignKey("AreaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Area");
+                });
+
             modelBuilder.Entity("DripChip.Domain.Entities.Visit", b =>
                 {
                     b.HasOne("DripChip.Domain.Entities.LocationPoint", "LocationPoint")
@@ -469,6 +516,11 @@ namespace DripChip.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("DripChip.Domain.Entities.Animal", b =>
                 {
                     b.Navigation("VisitedLocations");
+                });
+
+            modelBuilder.Entity("DripChip.Domain.Entities.Area", b =>
+                {
+                    b.Navigation("AreaPoints");
                 });
 
             modelBuilder.Entity("DripChip.Domain.Entities.LocationPoint", b =>

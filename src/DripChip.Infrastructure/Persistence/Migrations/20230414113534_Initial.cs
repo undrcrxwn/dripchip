@@ -26,6 +26,19 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Areas",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Areas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
@@ -81,6 +94,26 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LocationPoints", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AreaPoints",
+                columns: table => new
+                {
+                    AreaId = table.Column<long>(type: "bigint", nullable: false),
+                    SequenceId = table.Column<int>(type: "integer", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AreaPoints", x => new { x.AreaId, x.SequenceId });
+                    table.ForeignKey(
+                        name: "FK_AreaPoints_Areas_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Areas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -346,6 +379,9 @@ namespace DripChip.Infrastructure.Persistence.Migrations
                 name: "AnimalLocationVisits");
 
             migrationBuilder.DropTable(
+                name: "AreaPoints");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -365,6 +401,9 @@ namespace DripChip.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Animals");
+
+            migrationBuilder.DropTable(
+                name: "Areas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

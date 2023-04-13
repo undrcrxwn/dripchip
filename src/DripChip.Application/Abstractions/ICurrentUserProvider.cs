@@ -7,7 +7,6 @@ namespace DripChip.Application.Abstractions;
 /// </summary>
 public interface ICurrentUserProvider
 {
-    public bool BypassAuthentication { get; set; }
     public bool IsAuthenticated { get; }
     public int? AccountId { get; }
     public Task<Account?> GetAccountAsync();

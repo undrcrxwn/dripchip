@@ -27,7 +27,6 @@ services:
   
   tests:
     image: mrexpen/planet_olymp_phase2
-    pull_policy: always
     ports:
       - "8090:8080"
     depends_on:

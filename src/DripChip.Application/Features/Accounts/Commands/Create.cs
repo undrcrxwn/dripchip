@@ -52,7 +52,7 @@ public static class Create
         public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
         {
             var issuer = await _issuer.GetAccountAsync();
-            if (issuer?.Role != Roles.Admin && !_issuer.BypassAuthentication)
+            if (issuer?.Role != Roles.Admin)
                 throw new ForbiddenException();
 
             if (request.Id is { } accountId)

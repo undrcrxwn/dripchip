@@ -31,8 +31,6 @@ internal class CurrentUserProvider : ICurrentUserProvider
         }
     }
 
-    public bool BypassAuthentication { get; set; }
-
     public bool IsAuthenticated => AccountId is not null;
 
     public async Task<Account?> GetAccountAsync() => AccountId is not null

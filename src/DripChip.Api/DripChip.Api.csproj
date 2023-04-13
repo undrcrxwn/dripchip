@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_ContentIncludedByDefault Remove="logs\myapp20230223.json" />
+      <_ContentIncludedByDefault Remove="logs\myaps2.Start0230223.json" />
     </ItemGroup>
 
 </Project>

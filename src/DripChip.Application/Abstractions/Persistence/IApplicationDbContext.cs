@@ -13,6 +13,8 @@ public interface IApplicationDbContext
     public DbSet<AnimalType> AnimalTypes { get; }
     public DbSet<Animal> Animals { get; }
     public DbSet<Visit> AnimalLocationVisits { get; }
+    public DbSet<Area> Areas { get; }
+    public DbSet<AreaPoint> AreaPoints { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
