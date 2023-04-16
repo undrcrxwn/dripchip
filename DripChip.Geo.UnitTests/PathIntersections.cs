@@ -9,9 +9,9 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = 0, Y = 0 },
-                new() { X = 0.5, Y = 1 },
-                new() { X = 1, Y = 0 }
+                new() { Longitude = 0, Latitude = 0 },
+                new() { Longitude = 0.5, Latitude = 1 },
+                new() { Longitude = 1, Latitude = 0 }
             }
         };
 
@@ -25,14 +25,14 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = 0, Y = 1 },
-                new() { X = -1, Y = -3 },
-                new() { X = -0.5, Y = 1 },
-                new() { X = -5, Y = 3 },
-                new() { X = 3, Y = 5 },
-                new() { X = -1.5, Y = 2.5 },
-                new() { X = 5, Y = 3.5 },
-                new() { X = 2, Y = -7 }
+                new() { Longitude = 0, Latitude = 1 },
+                new() { Longitude = -1, Latitude = -3 },
+                new() { Longitude = -0.5, Latitude = 1 },
+                new() { Longitude = -5, Latitude = 3 },
+                new() { Longitude = 3, Latitude = 5 },
+                new() { Longitude = -1.5, Latitude = 2.5 },
+                new() { Longitude = 5, Latitude = 3.5 },
+                new() { Longitude = 2, Latitude = -7 }
             }
         };
 
@@ -46,11 +46,11 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = -1, Y = -1 },
-                new() { X = 1, Y = -1 },
-                new() { X = 1, Y = 1 },
-                new() { X = 0, Y = -1 },
-                new() { X = -1, Y = 1 }
+                new() { Longitude = -1, Latitude = -1 },
+                new() { Longitude = 1, Latitude = -1 },
+                new() { Longitude = 1, Latitude = 1 },
+                new() { Longitude = 0, Latitude = -1 },
+                new() { Longitude = -1, Latitude = 1 }
             }
         };
 
@@ -64,10 +64,10 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = 0, Y = 0 },
-                new() { X = 0.5, Y = 0.5 },
-                new() { X = 2, Y = 2 },
-                new() { X = 5, Y = 5 }
+                new() { Longitude = 0, Latitude = 0 },
+                new() { Longitude = 0.5, Latitude = 0.5 },
+                new() { Longitude = 2, Latitude = 2 },
+                new() { Longitude = 5, Latitude = 5 }
             }
         };
 
@@ -81,10 +81,10 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = 0, Y = 0 },
-                new() { X = 0, Y = 1 },
-                new() { X = 1, Y = 0 },
-                new() { X = 1, Y = 1 }
+                new() { Longitude = 0, Latitude = 0 },
+                new() { Longitude = 0, Latitude = 1 },
+                new() { Longitude = 1, Latitude = 0 },
+                new() { Longitude = 1, Latitude = 1 }
             }
         };
 
@@ -92,16 +92,16 @@ public class PathIntersections
     }
     
     [Fact]
-    public void TwoSquaresOverlap()
+    public void OverlappingEdge()
     {
         var a = new Polygon
         {
             Points = new Point[]
             {
-                new() { X = -1, Y = -1 },
-                new() { X = -1, Y = 1 },
-                new() { X = -0.1, Y = 1 },
-                new() { X = -0.1, Y = -1 }
+                new() { Longitude = -1, Latitude = -1 },
+                new() { Longitude = -1, Latitude = 1 },
+                new() { Longitude = 0, Latitude = 1 },
+                new() { Longitude = 0, Latitude = -1 }
             }
         };
         
@@ -109,30 +109,68 @@ public class PathIntersections
         {
             Points = new Point[]
             {
-                new() { X = -1, Y = -1 },
-                new() { X = -1, Y = 1 },
-                new() { X = -0.1, Y = 1 },
-                new() { X = -0.1, Y = -1 }
+                new() { Longitude = 1, Latitude = 1 },
+                new() { Longitude = 1, Latitude = -1 },
+                new() { Longitude = 0, Latitude = -1 },
+                new() { Longitude = 0, Latitude = 1 }
             }
         };
 
-        Assert.True(a.Overlaps(b));
+        Assert.False(a.Overlaps(b));
+    }
+    
+    [Fact]
+    public void TwoRectanglesAlmostOverlap()
+    {
+        var a = new Polygon
+        {
+            Points = new Point[]
+            {
+                new() { Longitude = -1, Latitude = -1 },
+                new() { Longitude = -1, Latitude = 1 },
+                new() { Longitude = -0.1, Latitude = 1 },
+                new() { Longitude = -0.1, Latitude = -1 }
+            }
+        };
+        
+        var b = new Polygon
+        {
+            Points = new Point[]
+            {
+                new() { Longitude = 1, Latitude = 1 },
+                new() { Longitude = 1, Latitude = -1 },
+                new() { Longitude = 0.1, Latitude = -1 },
+                new() { Longitude = 0.1, Latitude = 1 }
+            }
+        };
+
+        Assert.False(a.Overlaps(b));
     }
     
     [Fact]
     public void Overlap()
     {
-        var polygon = new Polygon
+        var a = new Polygon
         {
             Points = new Point[]
             {
-                new() { X = 1, Y = -179 },
-                new() { X = 1, Y = -166 },
-                new() { X = 7, Y = -166 },
-                new() { X = 7, Y = -180 }
+                new() { Longitude = -179, Latitude = 1 },
+                new() { Longitude = -166, Latitude = 1 },
+                new() { Longitude = -166, Latitude = 7 },
+                new() { Longitude = -180, Latitude = 7 }
             }
         };
         
-        Assert.False(polygon.HasIntersections());
+        var b = new Polygon
+        {
+            Points = new Point[]
+            {
+                new() { Longitude = -166, Latitude = 14 },
+                new() { Longitude = -179, Latitude = 14 },
+                new() { Longitude = -172.5, Latitude = 3 }
+            }
+        };
+        
+        Assert.True(a.Overlaps(b));
     }
 }

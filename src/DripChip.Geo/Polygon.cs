@@ -5,7 +5,7 @@ namespace DripChip.Geo;
 
 public class Polygon
 {
-    public Point[] Points;
+    public IList<Point> Points;
 
     public bool HasIntersections()
     {

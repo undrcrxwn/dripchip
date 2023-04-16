@@ -17,8 +17,8 @@ public class Segment
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
         var val =
-            (q.Y - p.Y) * (r.X - q.X) -
-            (q.X - p.X) * (r.Y - q.Y);
+            (q.Latitude - p.Latitude) * (r.Longitude - q.Longitude) -
+            (q.Longitude - p.Longitude) * (r.Latitude - q.Latitude);
 
         return val switch
         {

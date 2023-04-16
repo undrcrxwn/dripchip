@@ -8,6 +8,8 @@ using DripChip.Geo;
 using FluentValidation;
 using Mapster;
 using Mediator;
+using Microsoft.EntityFrameworkCore;
+using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Areas.Commands;
 
@@ -33,8 +35,8 @@ public static class Create
             {
                 var points = areaPoints.Select(areaPoint => new Point
                 {
-                    X = areaPoint.Latitude,
-                    Y = areaPoint.Longitude
+                    Longitude = areaPoint.Latitude,
+                    Latitude = areaPoint.Longitude
                 });
 
                 var polygon = new Polygon { Points = points.ToArray() };
@@ -70,6 +72,20 @@ public static class Create
                 Latitude = point.Latitude,
                 Longitude = point.Longitude
             }).ToList();
+
+            var existingAreaPoints = await _context.Areas.Select(x => x.AreaPoints).ToListAsync(cancellationToken);
+            var existingPolygons = existingAreaPoints.Select(areaPoints => new Polygon
+            {
+                Points = areaPoints.ToArray<Point>()
+            });
+
+            var polygon = new Polygon
+            {
+                Points = area.AreaPoints.ToArray<Point>()
+            };
+
+            if (existingPolygons.Any(polygon.Overlaps))
+                throw new ValidationException();
 
             await _context.Areas.AddAsync(area, cancellationToken);
 
