@@ -26,4 +26,12 @@ public sealed class AreasController : ApiControllerBase
     [HttpDelete("{areaId}")]
     public async Task Delete([FromRoute] long areaId) =>
         await Mediator.Send(new Delete.Command(areaId));
+
+    #region Analytics
+
+    [HttpGet("{areaId}/analytics")]
+    public async Task<GetAnalytics.Response> Analytics([FromRoute] long areaId, [FromQuery] GetAnalytics.Query query) =>
+        await Mediator.Send(query with { Id = areaId });
+
+    #endregion
 }
