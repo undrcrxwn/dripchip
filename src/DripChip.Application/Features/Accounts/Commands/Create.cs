@@ -1,17 +1,12 @@
 using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
-using DripChip.Application.Models.Identity;
 using DripChip.Domain.Constants;
 using DripChip.Domain.Entities;
-using DripChip.Infrastructure.Identity.Extensions;
 using FluentValidation;
 using Mapster;
 using Mediator;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Accounts.Commands;
 

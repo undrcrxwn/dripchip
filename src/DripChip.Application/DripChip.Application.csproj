@@ -23,7 +23,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DripChip.Domain\DripChip.Domain.csproj" />
-      <ProjectReference Include="..\DripChip.Geo\DripChip.Geo.csproj" />
     </ItemGroup>
 
 </Project>

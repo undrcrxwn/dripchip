@@ -1,5 +1,4 @@
 using DripChip.Domain.Abstractions;
-using DripChip.Domain.Entities;
 using Mapster;
 
 namespace DripChip.Application;

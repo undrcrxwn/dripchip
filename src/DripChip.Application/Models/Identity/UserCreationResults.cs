@@ -1,4 +1,3 @@
-using DripChip.Application.Abstractions.Identity;
 using DripChip.Domain.Entities;
 
 namespace DripChip.Application.Models.Identity;

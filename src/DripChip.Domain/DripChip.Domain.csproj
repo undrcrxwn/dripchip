@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DripChip.Geo\DripChip.Geo.csproj" />
+      <ProjectReference Include="..\DripChip.Spatial\DripChip.Spatial.csproj" />
     </ItemGroup>
 
 </Project>

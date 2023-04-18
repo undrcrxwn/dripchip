@@ -5,7 +5,7 @@ namespace DripChip.Api.Extensions;
 public static class SwaggerExtensions
 {
     private const string SwaggerIgnoredNamespaceIdentifiersKey = "Swagger:IgnoredNamespaceIdentifiers";
-    
+
     public static IServiceCollection ConfigureSwagger(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSwaggerGen(options =>
@@ -19,14 +19,13 @@ public static class SwaggerExtensions
                 // Swagger names for the public DTOs.
                 var ignoredIdentifiers = configuration
                     .GetSection(SwaggerIgnoredNamespaceIdentifiersKey)
-                    .Get<string[]>()!;
+                    .Get<HashSet<string>>()!;
 
                 // Generates unique and user-friendly names for CQRS entities.
                 // For example, 'Features.Accounts.Commands.Create.Command' gets turned into 'AccountsCreateCommand'.
-                var lastNames = type.FullName!.Split('.')
-                    .Except(ignoredIdentifiers)
-                    .TakeLast(2)
-                    .Select(name => name.Replace("+", string.Empty));
+                var lastNames = type.FullName!.Split('.', '+')
+                    .Where(identifier => !ignoredIdentifiers.Contains(identifier))
+                    .TakeLast(3);
 
                 return string.Join(string.Empty, lastNames);
             });

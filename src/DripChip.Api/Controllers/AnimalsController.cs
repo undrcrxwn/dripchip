@@ -2,7 +2,6 @@ using DripChip.Application.Features.Animals.Commands;
 using DripChip.Application.Features.Animals.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace DripChip.Api.Controllers;
 

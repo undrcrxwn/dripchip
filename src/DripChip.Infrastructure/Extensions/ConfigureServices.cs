@@ -2,7 +2,6 @@ using DripChip.Application.Abstractions.Identity;
 using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Abstractions.Specifications;
 using DripChip.Domain.Entities;
-using DripChip.Infrastructure.Identity;
 using DripChip.Infrastructure.Identity.Services;
 using DripChip.Infrastructure.Persistence;
 using DripChip.Infrastructure.Persistence.Services;

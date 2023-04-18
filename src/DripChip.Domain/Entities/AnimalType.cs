@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using DripChip.Domain.Abstractions;
 
 #pragma warning disable CS8618

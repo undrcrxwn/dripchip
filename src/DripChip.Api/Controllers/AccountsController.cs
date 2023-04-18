@@ -3,7 +3,6 @@ using DripChip.Application.Features.Accounts.Commands;
 using DripChip.Application.Features.Accounts.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace DripChip.Api.Controllers;
 

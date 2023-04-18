@@ -4,12 +4,9 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Constants;
 using DripChip.Domain.Entities;
-using DripChip.Geo;
 using FluentValidation;
 using Mapster;
 using Mediator;
-using Microsoft.EntityFrameworkCore;
-using ValidationException = DripChip.Application.Exceptions.ValidationException;
 
 namespace DripChip.Application.Features.Areas.Commands;
 
@@ -50,10 +47,10 @@ public static class Update
 
             area.AreaPoints = request.AreaPoints.Select((point, i) => new AreaPoint
             {
-                Area = area,
-                SequenceId = i,
+                Longitude = point.Longitude,
                 Latitude = point.Latitude,
-                Longitude = point.Longitude
+                Area = area,
+                SequenceId = i
             }).ToList();
 
             await _context.SaveChangesAsync(cancellationToken);

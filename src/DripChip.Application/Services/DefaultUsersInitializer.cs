@@ -1,16 +1,11 @@
-using DripChip.Application.Abstractions;
-using DripChip.Application.Abstractions.Persistence;
 using DripChip.Application.Exceptions;
 using DripChip.Application.Features.Accounts.Commands;
 using DripChip.Domain.Entities;
-using DripChip.Infrastructure.Identity.Extensions;
 using Mapster;
-using Mediator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace DripChip.Application.Services;
 

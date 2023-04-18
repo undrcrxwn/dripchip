@@ -4,7 +4,7 @@ using DripChip.Application.Exceptions;
 using DripChip.Application.Extensions;
 using DripChip.Domain.Constants;
 using DripChip.Domain.Entities;
-using DripChip.Geo;
+using DripChip.Spatial;
 using FluentValidation;
 using Mapster;
 using Mediator;
@@ -33,13 +33,9 @@ public static class Create
 
             RuleFor(x => x.AreaPoints).Custom((areaPoints, context) =>
             {
-                var points = areaPoints.Select(areaPoint => new Point
-                {
-                    Longitude = areaPoint.Latitude,
-                    Latitude = areaPoint.Longitude
-                });
+                var points = areaPoints.Select(areaPoint => new Point(areaPoint.Longitude, areaPoint.Latitude));
 
-                var polygon = new Polygon { Points = points.ToArray() };
+                var polygon = new Polygon(points.ToArray());
                 if (polygon.HasIntersections())
                     context.AddFailure(context.PropertyName, "Polygon is not allowed to have intersections.");
             });
@@ -67,24 +63,21 @@ public static class Create
 
             area.AreaPoints = request.AreaPoints.Select((point, i) => new AreaPoint
             {
-                Area = area,
-                SequenceId = i,
+                Longitude = point.Longitude,
                 Latitude = point.Latitude,
-                Longitude = point.Longitude
+                Area = area,
+                SequenceId = i
             }).ToList();
 
-            var existingAreaPoints = await _context.Areas.Select(x => x.AreaPoints).ToListAsync(cancellationToken);
-            var existingPolygons = existingAreaPoints.Select(areaPoints => new Polygon
-            {
-                Points = areaPoints.ToArray<Point>()
-            });
+            var existingAreaPoints = await _context.Areas
+                .Select(are => are.AreaPoints.Select(point => point.ToPoint()))
+                .ToListAsync(cancellationToken);
+            
+            var existingPolygons = existingAreaPoints.Select(areaPoints => new Polygon(areaPoints.ToArray()));
 
-            var polygon = new Polygon
-            {
-                Points = area.AreaPoints.ToArray<Point>()
-            };
+            var polygon = area.ToPolygon();
 
-            if (existingPolygons.Any(polygon.Overlaps))
+            if (existingPolygons.Any(polygon.Overlays))
                 throw new ValidationException();
 
             await _context.Areas.AddAsync(area, cancellationToken);

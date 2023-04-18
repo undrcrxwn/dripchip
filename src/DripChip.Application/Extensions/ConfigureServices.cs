@@ -1,4 +1,5 @@
 using System.Reflection;
+using DripChip.Application.Abstractions;
 using DripChip.Application.Behaviors;
 using DripChip.Application.Services;
 using FluentValidation;
@@ -15,11 +16,12 @@ public static class ConfigureServices
         var assembly = Assembly.GetExecutingAssembly();
         var typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
         typeAdapterConfig.Scan(assembly);
-        
+
         return services
             .AddValidatorsFromAssembly(assembly)
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>))
+            .AddSingleton<IGeoHasher, GeoHasher>()
             .AddHostedService<DefaultUsersInitializer>()
             .AddMediator(options => options.ServiceLifetime = ServiceLifetime.Scoped);
     }
